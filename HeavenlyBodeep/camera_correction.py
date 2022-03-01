@@ -11,11 +11,10 @@ import sys
 
 path=os.path.join(os.path.dirname(__file__),'model','rotation_model')
 
-print(path)
 model = keras.models.load_model(path)
 
 def get_angle(model):
-    ''' Takes screenshot and returns angular position '''
+    ''' Takes a screenshot and returns angular position '''
     img = pyautogui.screenshot()
     img=img.crop((660,240,1260,840)).resize((64,64))
     img_pred=np.array([np.array(img)[:,:,0:3]])
