@@ -1,11 +1,12 @@
 from dis import dis
 import matplotlib.pyplot as plt
-import numpy as np
+#import numpy as np
 
 import pyvjoy
 
 import cv2
 import mediapipe as mp
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_holistic = mp.solutions.holistic
@@ -13,8 +14,6 @@ mp_holistic = mp.solutions.holistic
 from predict_player_position import compute_player_position
 from predict_grab_status import compute_grab_status
 from deep_controller import update_joystick, update_buttons
-
-return_option = 'dict'
 
 # For webcam input:
 cap = cv2.VideoCapture(0)
@@ -37,12 +36,11 @@ with mp_holistic.Holistic(
     results = holistic.process(image)
 
     # Compute player position, grab status and update the controller accordingly
-    if return_option == 'dict':
-      player_position = compute_player_position(results, discard_not_found=False)
-      grab_status = compute_grab_status(results)
-      update_joystick(j, player_position)
-      update_buttons(j, grab_status)
-      print(grab_status)
+
+    player_position = compute_player_position(results, discard_not_found=False)
+    grab_status = compute_grab_status(results)
+    update_joystick(j, player_position)
+    update_buttons(j, grab_status)
 
     # Draw landmark annotation on the image.
     image.flags.writeable = True

@@ -1,7 +1,7 @@
 
 # results.pose_landmarks.landmark[mp_holistic.PoseLandmark.LEFT_SHOULDER]
-from cmath import pi
-from math import asin, acos
+#from cmath import pi
+from math import acos
 import mediapipe as mp
 mp_holistic = mp.solutions.holistic
 

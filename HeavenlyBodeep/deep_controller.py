@@ -15,10 +15,9 @@ def coordinate_correction(x):
 
 
 def update_joystick(j, player_position):
-    """Update joystick command according to player position and hand grab status"""
+    """Update joystick command according to player position"""
     # player_position['left_hand_dist','right_hand_dist','left_hand_angle','right_hand_angle']
     # grab_status['left', 'right'] --> 0 for release, 1 for neutral, 2 for grab
-
 
     if player_position:
         left_hand_coordinate_x = int(0x4000)-(player_position['left_hand_dist'] * sin(player_position['left_hand_angle']))*int(0x4000)
@@ -35,18 +34,15 @@ def update_joystick(j, player_position):
 
 
 def update_buttons(j, grab_status):
-
-
-    if grab_status['left_hand']==0:
-        print('left hand grab')
+    """Update joystick command according to hand grab status"""
+    if grab_status['left_hand'] == 0:
         j.set_button(5,1)
     elif grab_status['left_hand'] == 2:
-        print('left hand release')
         j.set_button(5,0)
     
-    if grab_status['right_hand']==2:
+    if grab_status['right_hand'] == 0:
         j.set_button(6,1)
-    elif grab_status['right_hand']==0:
+    elif grab_status['right_hand'] == 2:
         j.set_button(6,0)
 
 
