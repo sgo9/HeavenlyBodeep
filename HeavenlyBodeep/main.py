@@ -38,7 +38,7 @@ with mp_holistic.Holistic(
     player_position = compute_player_position(results, discard_not_found=False)
     grab_status = compute_grab_status(results)
     update_joystick(j, player_position)
-    update_buttons(j, grab_status)
+    update_buttons(j, grab_status, player_position)
 
     # Draw landmark annotation on the image.
     image.flags.writeable = True

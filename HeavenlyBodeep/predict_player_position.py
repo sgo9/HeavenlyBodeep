@@ -43,6 +43,8 @@ def compute_player_position(results, discard_not_found=True):
     left_hand_angle = (acos(left_hand_dist_y/left_hand_dist))
     right_hand_angle = (acos(right_hand_dist_y/right_hand_dist))
 
+
+
     # edit player position dictionnary
     player_position = {}
     player_position['left_hand_dist'] = left_hand_dist
@@ -50,6 +52,14 @@ def compute_player_position(results, discard_not_found=True):
     player_position['left_hand_angle'] = left_hand_angle
     player_position['right_hand_angle'] = right_hand_angle
 
+    # A command
+    if (pt_15.x-pt_16.x)/normalization_factor <0.35:
+        player_position['a_command'] = 0
+    elif (pt_15.x-pt_16.x)/normalization_factor >0.5:
+        player_position['a_command'] = 2
+    else:
+        player_position['a_command'] = 1
+        
     return player_position
 
 if __name__=="__main__":

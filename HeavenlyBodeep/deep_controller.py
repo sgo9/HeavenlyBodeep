@@ -33,7 +33,7 @@ def update_joystick(j, player_position):
     j.update()
 
 
-def update_buttons(j, grab_status):
+def update_buttons(j, grab_status, player_position):
     """Update joystick command according to hand grab status"""
     if grab_status:
         if grab_status['left_hand'] == 0:
@@ -46,6 +46,11 @@ def update_buttons(j, grab_status):
         elif grab_status['right_hand'] == 2:
             j.set_button(6,0)
 
+    if player_position:
+        if player_position['a_command'] == 0:
+            j.set_button(1,1)
+        elif player_position['a_command'] == 2:
+            j.set_button(1,0)
 
 
 if __name__=="__main__":
