@@ -2,7 +2,7 @@ from dis import dis
 import matplotlib.pyplot as plt
 import numpy as np
 
-import time
+import pyvjoy
 
 import cv2
 import mediapipe as mp
@@ -10,14 +10,16 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_holistic = mp.solutions.holistic
 
-from compute_holistic_result import compute_holistic_result
-from compute_hand_status import compute_hand_status
-from deep_controller import update_joystick
+from predict_player_position import compute_player_position
+from predict_grab_status import compute_grab_status
+from deep_controller import update_joystick, update_buttons
 
 return_option = 'dict'
 
 # For webcam input:
 cap = cv2.VideoCapture(0)
+# For VJoy output:
+j = pyvjoy.VJoyDevice(1)
 
 with mp_holistic.Holistic(
     min_detection_confidence=0.5,
@@ -29,17 +31,18 @@ with mp_holistic.Holistic(
       # If loading a video, use 'break' instead of 'continue'.
       continue
 
-    # To improve performance, optionally mark the image as not writeable to
-    # pass by reference.
+    # To improve performance, optionally mark the image as not writeable
     image.flags.writeable = False
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     results = holistic.process(image)
 
+    # Compute player position, grab status and update the controller accordingly
     if return_option == 'dict':
-      player_position = compute_holistic_result(results, discard_not_found=False)
-      #print(compute_hand_status(results))
-      update_joystick(player_position)
-      #time.sleep(1)
+      player_position = compute_player_position(results, discard_not_found=False)
+      grab_status = compute_grab_status(results)
+      update_joystick(j, player_position)
+      update_buttons(j, grab_status)
+      print(grab_status)
 
     # Draw landmark annotation on the image.
     image.flags.writeable = True
@@ -52,19 +55,19 @@ with mp_holistic.Holistic(
         landmark_drawing_spec=mp_drawing_styles
         .get_default_pose_landmarks_style())
 
-    mp_drawing.draw_landmarks(
-            image,
-            results.left_hand_landmarks,
-            mp_holistic.HAND_CONNECTIONS,
-            landmark_drawing_spec=mp_drawing_styles
-            .get_default_pose_landmarks_style())
+    # mp_drawing.draw_landmarks(
+    #         image,
+    #         results.left_hand_landmarks,
+    #         mp_holistic.HAND_CONNECTIONS,
+    #         landmark_drawing_spec=mp_drawing_styles
+    #         .get_default_pose_landmarks_style())
 
-    mp_drawing.draw_landmarks(
-            image,
-            results.right_hand_landmarks,
-            mp_holistic.HAND_CONNECTIONS,
-            landmark_drawing_spec=mp_drawing_styles
-            .get_default_pose_landmarks_style())
+    # mp_drawing.draw_landmarks(
+    #         image,
+    #         results.right_hand_landmarks,
+    #         mp_holistic.HAND_CONNECTIONS,
+    #         landmark_drawing_spec=mp_drawing_styles
+    #         .get_default_pose_landmarks_style())
 
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Holistic', cv2.flip(image, 1))
