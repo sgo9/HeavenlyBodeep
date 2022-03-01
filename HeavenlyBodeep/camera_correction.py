@@ -20,5 +20,4 @@ def get_angle(model):
     img=img.crop((660,240,1260,840)).resize((64,64))
     img_pred=np.array([np.array(img)[:,:,0:3]])
     pred=np.argmax(model.predict(img_pred), axis=-1)[0]*5
-    print(pred)
     return pred
