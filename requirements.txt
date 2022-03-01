@@ -8,6 +8,7 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
+mediapipe
 
 # tests/linter
 black
@@ -27,6 +28,7 @@ six>=1.14
 joblib
 memoized-property
 termcolor
+pyvjoy
 
 #screenshot
 PIL
