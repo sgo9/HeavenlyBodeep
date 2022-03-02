@@ -53,12 +53,12 @@ def update_buttons(j, grab_status, player_position):
         elif player_position['a_command'] == 2:
             j.set_button(1,0)
 
-        if player_position['legs'] == 1: # jambes repliées
-            j.set_button(7,1)
-            j.set_button(8,1)
-        else: # jambes tendues
-            j.set_button(7,0)
-            j.set_button(8,1)
+        # if player_position['legs'] == 1: # jambes repliées
+        #     j.set_button(7,1)
+        #     j.set_button(8,1)
+        # else: # jambes tendues
+        #     j.set_button(7,0)
+        #     j.set_button(8,1)
 
 
 if __name__=="__main__":
