@@ -5,6 +5,12 @@ import pyautogui
 from scipy.spatial import distance as dist
 import imutils
 
+def centeroidnp(arr):
+    length = arr.shape[0]
+    sum_x = np.sum(arr[:, 0])
+    sum_y = np.sum(arr[:, 1])
+    return sum_x/length, sum_y/length
+
 def test_filter():
     image = cv2.imread("../raw_data/101.png") #cv2.IMREAD_GRAYSCALE)
 
@@ -139,10 +145,10 @@ def stream_station_distance():
 
         s1 = np.array([austronaut_coord])
         s2 = np.array(list_xy)
-        distance = dist.cdist(s1,s2).min(axis=1)
+        min_dist = dist.cdist(s1,np.array([centeroidnp(s2)])).min(axis=1)[0]
 
 
-        print(distance)
+        print(min_dist)
 
     
     cv2.destroyAllWindows()
