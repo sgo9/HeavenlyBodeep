@@ -2,7 +2,6 @@
 # https://gamepad-tester.com/
 
 import pyvjoy
-import time
 from math import cos, sin
 
 def coordinate_correction(x):
@@ -14,12 +13,20 @@ def coordinate_correction(x):
     return int(x)
 
 
-def update_joystick(j, player_position):
-    """Update joystick command according to player position"""
-    # player_position['left_hand_dist','right_hand_dist','left_hand_angle','right_hand_angle']
-    # grab_status['left', 'right'] --> 0 for release, 1 for neutral, 2 for grab
+def compute_buttons_value(a_command, grab_left, grab_right, legs_status):
+    """Return the decimal value corresponding to the binary mapping of buttons status
+    a_command : b1 (2**0), grab_left : b5 (2**4), grab_right : b6 (2**5), legs : b7 + b8 (2**6+2**7)"""
+    return a_command * 1 + grab_left * 16 +  grab_right * 32 + legs_status * 192
+
+
+def update_vjoy(j, player_position, grab_status):
+    """Main function of deep_controller
+    Update joystick status according to player position and grab status"""
 
     if player_position:
+
+        # joystick position (hands distance and position)
+
         left_hand_coordinate_x = int(0x4000)-(player_position['left_hand_dist'] * sin(player_position['left_hand_angle']))*int(0x4000)
         left_hand_coordinate_y = (player_position['left_hand_dist'] * -cos(player_position['left_hand_angle']))*int(0x4000)+int(0x4000)
         j.data.wAxisX = coordinate_correction(left_hand_coordinate_x)
@@ -31,48 +38,32 @@ def update_joystick(j, player_position):
         j.data.wAxisXRot = coordinate_correction(right_hand_coordinate_y)
 
 
-    j.update()
+        # buttons status (A, left and right grab, legs status)
+
+        a_command = player_position.get('a_command', False)
+        grab_left = grab_status.get('left_hand', False)
+        grab_right = grab_status.get('right_hand', False)
+        legs_status = player_position.get('legs_status', False)
+
+        j.data.lButtons = compute_buttons_value(a_command, grab_left, grab_right, legs_status)
 
 
-def update_buttons(j, grab_status, player_position):
-    """Update joystick command according to hand grab status"""
-    if grab_status:
-        if grab_status['left_hand'] == 0:
-            j.set_button(5,1)
-        elif grab_status['left_hand'] == 2:
-            j.set_button(5,0)
-        
-        if grab_status['right_hand'] == 0:
-            j.set_button(6,1)
-        elif grab_status['right_hand'] == 2:
-            j.set_button(6,0)
-
-    if player_position:
-        if player_position['a_command'] == 0:
-            j.set_button(1,1)
-        elif player_position['a_command'] == 2:
-            j.set_button(1,0)
-
-        if player_position['legs'] == 1: # jambes repliées
-            j.set_button(7,1)
-            j.set_button(8,1)
-        else: # jambes tendues
-            j.set_button(7,0)
-            j.set_button(8,1)
+    j.update() # update method to push joystick attributes at the same time and avoid saturation
 
 
 if __name__=="__main__":
 
-    #Pythonic API, item-at-a-time
     j = pyvjoy.VJoyDevice(1)
-    time.sleep(1) # Sleep for 1 second
-    j.set_button(6,1)
-    time.sleep(1) # Sleep for 1 second
-    j.set_button(6,0)
-    time.sleep(1) # Sleep for 1 second
-    j.set_button(5,1)
-    time.sleep(1) # Sleep for 1 second
-    j.set_button(5,0)
 
-    #send data to vJoy device
+    j.data.lButtons = 17
+    j.update()
+
+    a_command = True
+    grab_left = False
+    grab_right = True
+    legs = True
+    j.data.lButtons = compute_buttons_value(a_command, grab_left, grab_right, legs)
+    j.update()
+
+    j.data.lButtons = 0
     j.update()

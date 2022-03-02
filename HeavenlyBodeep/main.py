@@ -1,4 +1,5 @@
 from dis import dis
+from turtle import update
 import matplotlib.pyplot as plt
 #import numpy as np
 import pyvjoy
@@ -11,7 +12,7 @@ mp_holistic = mp.solutions.holistic
 
 from predict_player_position import compute_player_position
 from predict_grab_status import compute_grab_status
-from deep_controller import update_joystick, update_buttons
+from deep_controller import update_vjoy
 
 # For webcam input:
 cap = cv2.VideoCapture(0)
@@ -37,8 +38,7 @@ with mp_holistic.Holistic(
 
     player_position = compute_player_position(results, discard_not_found=False)
     grab_status = compute_grab_status(results)
-    update_joystick(j, player_position)
-    update_buttons(j, grab_status, player_position)
+    update_vjoy(j, player_position, grab_status)
 
     # Draw landmark annotation on the image.
     image.flags.writeable = True
