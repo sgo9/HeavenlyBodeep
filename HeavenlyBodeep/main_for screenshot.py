@@ -62,6 +62,7 @@ with mp_holistic.Holistic(
     if faitdodo==1:
       make_screenshot(i)
       j.set_button(3,0)
+      
     faitdodo=1
     if datetime.now().second-now==2:
       faitdodo=0
