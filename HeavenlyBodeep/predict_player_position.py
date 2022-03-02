@@ -53,17 +53,10 @@ def compute_player_position(results, discard_not_found=True):
     player_position['right_hand_angle'] = right_hand_angle
 
     # A command
-    if (pt_15.x-pt_16.x)/normalization_factor <0.35:
-        player_position['a_command'] = True
-    else:
-        player_position['a_command'] = False
-        
+    player_position['a_command'] = (pt_15.x-pt_16.x)/normalization_factor < 0.35
+
     # legs status
-    legs_position = min([abs(pt_25.y-pt_12.y)/normalization_factor, abs(pt_26.y-pt_11.y)/normalization_factor])
-    if legs_position < 1.3:
-        player_position['legs_status'] = True
-    else:
-        player_position['legs_status'] = False
+    player_position['legs_status'] = min([abs(pt_25.y-pt_12.y), abs(pt_26.y-pt_11.y)])/normalization_factor < 1.3
 
     return player_position
 
