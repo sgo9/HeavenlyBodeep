@@ -9,6 +9,13 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_holistic = mp.solutions.holistic
 
+# Ignoring tensorflow loading warnings (CUDA)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+from tensorflow.keras import models
+
+# IgnoringStop ignoring tensorflow loading warnings (CUDA)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0' 
+
 from predict_player_position import compute_player_position
 from predict_grab_status import compute_grab_status
 from deep_controller import update_vjoy
@@ -17,6 +24,10 @@ from deep_controller import update_vjoy
 cap = cv2.VideoCapture(0)
 # For VJoy output:
 j = pyvjoy.VJoyDevice(1)
+
+#importing model for angle correction:
+model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'model.h5')
+model = models.load_model(model_path)
 
 with mp_holistic.Holistic(
     min_detection_confidence=0.5,
