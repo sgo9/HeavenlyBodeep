@@ -29,5 +29,5 @@ pyvjoy
 opencv-python
 
 #screenshot
-PIL
-pyautogui
+Pillow
+PyAutoGUI
