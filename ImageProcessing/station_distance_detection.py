@@ -62,3 +62,4 @@ def station_distance(image):
     min_dist = dist.cdist(s1,np.array([centeroidnp(s2)])).min(axis=1)[0]
 
     return int(min_dist)
+    
