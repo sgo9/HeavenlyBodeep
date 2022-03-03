@@ -12,7 +12,9 @@ def make_screenshot(file_name):
 
 
 
-# i=0
+
+i=max([int(i[:-4]) for i in os.listdir(path) if i[-4:]==".png"])+1
+print(i)
 # while True:
 #     if i==0:
 #         time.sleep(10)
