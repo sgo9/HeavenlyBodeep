@@ -1,9 +1,7 @@
 """Predict hand grab status using holistic result"""
 
+from utils import distance
 
-def distance(x1, x2, y1, y2):
-    """Returns the distance between two points in 2D dimension"""
-    return ((x2-x1)**2 + (y2-y1)**2)**0.5
 
 def compute_grab_status(results, discard_not_found=True):
     """Returns a dictionary with the hand status (opened or closed).

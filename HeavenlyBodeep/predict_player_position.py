@@ -1,14 +1,8 @@
-
-# results.pose_landmarks.landmark[mp_holistic.PoseLandmark.LEFT_SHOULDER]
-#from cmath import pi
-from cmath import pi
-from math import acos
+from math import acos, pi
 import mediapipe as mp
-mp_holistic = mp.solutions.holistic
+from utils import distance
 
-def distance(x1, x2, y1, y2):
-    """Return distance between two points in 2D dimension"""
-    return ((x2-x1)**2 + (y2-y1)**2)**0.5
+mp_holistic = mp.solutions.holistic
 
 def compute_player_position(results, discard_not_found=True):
 
