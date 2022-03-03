@@ -19,7 +19,7 @@ def compute_buttons_value(a_command, grab_left, grab_right, legs_status):
     return a_command * 1 + grab_left * 16 +  grab_right * 32 + legs_status * 192
 
 
-def update_vjoy(j, player_position, grab_status):
+def update_vjoy(j, player_position, grab_status, angle_correction):
     """Main function of deep_controller
     Update joystick status according to player position and grab status"""
 
@@ -27,13 +27,13 @@ def update_vjoy(j, player_position, grab_status):
 
         # joystick position (hands distance and position)
 
-        left_hand_coordinate_x = int(0x4000)-(player_position['left_hand_dist'] * sin(player_position['left_hand_angle']))*int(0x4000)
-        left_hand_coordinate_y = (player_position['left_hand_dist'] * -cos(player_position['left_hand_angle']))*int(0x4000)+int(0x4000)
+        left_hand_coordinate_x = int(0x4000)-(player_position['left_hand_dist'] * sin(player_position['left_hand_angle']-angle_correction))*int(0x4000)
+        left_hand_coordinate_y = (player_position['left_hand_dist'] * -cos(player_position['left_hand_angle']-angle_correction))*int(0x4000)+int(0x4000)
         j.data.wAxisX = coordinate_correction(left_hand_coordinate_x)
         j.data.wAxisY = coordinate_correction(left_hand_coordinate_y)
 
-        right_hand_coordinate_x = int(0x4000)+(player_position['right_hand_dist'] * sin(player_position['right_hand_angle']))*int(0x4000)
-        right_hand_coordinate_y = (player_position['right_hand_dist'] * -cos(player_position['right_hand_angle']))*int(0x4000)+int(0x4000)
+        right_hand_coordinate_x = int(0x4000)+(player_position['right_hand_dist'] * sin(player_position['right_hand_angle']+angle_correction))*int(0x4000)
+        right_hand_coordinate_y = (player_position['right_hand_dist'] * -cos(player_position['right_hand_angle']+angle_correction))*int(0x4000)+int(0x4000)
         j.data.wAxisYRot = coordinate_correction(right_hand_coordinate_x)
         j.data.wAxisXRot = coordinate_correction(right_hand_coordinate_y)
 

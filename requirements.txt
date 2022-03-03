@@ -9,6 +9,7 @@ numpy
 pandas
 scikit-learn
 mediapipe
+tensorflow
 
 # tests/linter
 black
