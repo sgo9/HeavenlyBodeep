@@ -1,13 +1,8 @@
-
-# results.pose_landmarks.landmark[mp_holistic.PoseLandmark.LEFT_SHOULDER]
-#from cmath import pi
-from math import acos
+from math import acos, pi
 import mediapipe as mp
-mp_holistic = mp.solutions.holistic
+from utils import distance
 
-def distance(x1, x2, y1, y2):
-    """Return distance between two points in 2D dimension"""
-    return ((x2-x1)**2 + (y2-y1)**2)**0.5
+mp_holistic = mp.solutions.holistic
 
 def compute_player_position(results, discard_not_found=True):
 
@@ -15,13 +10,13 @@ def compute_player_position(results, discard_not_found=True):
     if results.pose_landmarks == None:
         return {}
 
-    # save the useful points (left and right shoulder, left and right wrist)
-    pt_11 = results.pose_landmarks.landmark[mp_holistic.PoseLandmark.LEFT_SHOULDER]
-    pt_12 = results.pose_landmarks.landmark[mp_holistic.PoseLandmark.RIGHT_SHOULDER]
-    pt_15 = results.pose_landmarks.landmark[mp_holistic.PoseLandmark.LEFT_WRIST]
-    pt_16 = results.pose_landmarks.landmark[mp_holistic.PoseLandmark.RIGHT_WRIST]
-    pt_25 = results.pose_landmarks.landmark[mp_holistic.PoseLandmark.LEFT_KNEE]
-    pt_26 = results.pose_landmarks.landmark[mp_holistic.PoseLandmark.RIGHT_KNEE]
+    # save the useful points (left and right shoulders, wrists and knees)
+    pt_11 = results.pose_landmarks.landmark[11] # mp_holistic.PoseLandmark.LEFT_SHOULDER
+    pt_12 = results.pose_landmarks.landmark[12] # mp_holistic.PoseLandmark.RIGHT_SHOULDER
+    pt_15 = results.pose_landmarks.landmark[15] # mp_holistic.PoseLandmark.LEFT_WRIST
+    pt_16 = results.pose_landmarks.landmark[16] # mp_holistic.PoseLandmark.RIGHT_WRIST
+    pt_25 = results.pose_landmarks.landmark[25] # mp_holistic.PoseLandmark.LEFT_KNEE
+    pt_26 = results.pose_landmarks.landmark[26] # mp_holistic.PoseLandmark.RIGHT_KNEE
 
     # check if all necessary points are found by the pose detection model
     if discard_not_found:
@@ -42,8 +37,15 @@ def compute_player_position(results, discard_not_found=True):
     left_hand_dist_y = (pt_15.y-pt_11.y)/normalization_factor
 
     # compute hand angles
-    left_hand_angle = (acos(left_hand_dist_y/left_hand_dist))
-    right_hand_angle = (acos(right_hand_dist_y/right_hand_dist))
+    if pt_15.x-pt_11.x > 0:
+        left_hand_angle = (acos(left_hand_dist_y/left_hand_dist))
+    else:
+        left_hand_angle = 2*pi-(acos(left_hand_dist_y/left_hand_dist))
+
+    if pt_16.x-pt_12.x < 0:
+        right_hand_angle = (acos(right_hand_dist_y/right_hand_dist))
+    else:
+        right_hand_angle = 2*pi-(acos(right_hand_dist_y/right_hand_dist))
 
     # edit player position dictionnary
     player_position = {}

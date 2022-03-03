@@ -25,10 +25,8 @@ s3fs
 
 # utilities
 six>=1.14
-joblib
-memoized-property
-termcolor
 pyvjoy
+opencv-python
 
 #screenshot
 PIL
