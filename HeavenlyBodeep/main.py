@@ -3,11 +3,12 @@ from turtle import update
 import matplotlib.pyplot as plt
 import pyvjoy
 import cv2
-import mediapipe as mp
+import mediapipe as mdp
 import os
 import pyautogui
 from datetime import date, datetime
-import multiprocessing as mlp
+import dill as pickle
+from pathos.helpers import mp
 
 
 # Ignoring tensorflow loading warnings (CUDA)
@@ -31,20 +32,21 @@ def get_inputs(holistic, image, return_dict):
   # Compute player position, grab status and update the controller accordingly
   player_position = compute_player_position(results, discard_not_found=False)
   grab_status = compute_grab_status(results)
-  return_dict['player_position'] = player_position
-  return_dict['grab_status'] = grab_status
+  with open("pos.pkl", "wb") as file:
+    pickle.dump([player_position, grab_status], file)
 
 # funtion to capture avatar's angle
-def get_angle(model, return_dict):
+def get_angle(model):
   image_game = pyautogui.screenshot()
   angle_correction = compute_angle_correction(image_game, model)
-  return_dict['angle'] = angle_correction
+  with open("angle.pkl", "wb") as file:
+    pickle.dump(angle_correction, file)
 
 if __name__ == '__main__':
   
-  mp_drawing = mp.solutions.drawing_utils
-  mp_drawing_styles = mp.solutions.drawing_styles
-  mp_holistic = mp.solutions.holistic
+  mp_drawing = mdp.solutions.drawing_utils
+  mp_drawing_styles = mdp.solutions.drawing_styles
+  mp_holistic = mdp.solutions.holistic
   
   # For webcam input:
   cap = cv2.VideoCapture(0)
@@ -63,18 +65,19 @@ if __name__ == '__main__':
         print("Ignoring empty camera frame.")
         # If loading a video, use 'break' instead of 'continue'.
         continue
-
-      manager = mlp.Manager()
-      return_dict = manager.dict()    
-      p1 = mlp.Process(target=get_inputs, args=(holistic, image, return_dict))
+   
+      p1 = mp.Process(target=get_inputs, args=(holistic, image))
       p1.start()
-      p2 = mlp.Process(target=get_angle, args=(model, return_dict))
+      p2 = mp.Process(target=get_angle, args=(model))
       p2.start()
       p1.join()
       p2.join()
+      player_position = pickle.load(open("pos.pkl","rb"))[0]
+      grab_status = pickle.load(open("pos.pkl","rb"))[1]
+      angle_correction = pickle.load(open("angle.pkl","rb"))[1]
       print(datetime.now().second)
 
-      update_vjoy(j, return_dict['player_position'], return_dict['grab_status'], return_dict['angle_correction'])
+      update_vjoy(j, player_position, grab_status, angle_correction)
 
       # Draw landmark annotation on the image.
       image.flags.writeable = True
