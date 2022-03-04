@@ -13,10 +13,10 @@ def coordinate_correction(x):
     return int(x)
 
 
-def compute_buttons_value(a_command, grab_left, grab_right, legs_status):
+def compute_buttons_value(a_command, grab_left, grab_right, legs_status, camera_auto_rotation=False):
     """Return the decimal value corresponding to the binary mapping of buttons status
     a_command : b1 (2**0), grab_left : b5 (2**4), grab_right : b6 (2**5), legs : b7 + b8 (2**6+2**7)"""
-    return a_command * 1 + grab_left * 16 +  grab_right * 32 + legs_status * 192
+    return a_command * 1 + grab_left * 16 +  grab_right * 32 + legs_status * 192 + camera_auto_rotation * 4
 
 
 def update_vjoy(j, player_position, grab_status, angle_correction):
