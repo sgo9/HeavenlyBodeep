@@ -11,6 +11,7 @@ def compute_grab_status(results):
         return {}
 
     grab_status = {}
+    grab_threshold = 1.5
 
     # grab right hand
     if results.right_hand_landmarks:
@@ -21,7 +22,7 @@ def compute_grab_status(results):
  
         ratio_rh = distance(x_rh[2],x_rh[0],y_rh[2],y_rh[0])/distance(x_rh[1],x_rh[0],y_rh[1],y_rh[0])
 
-        if ratio_rh < 1.2:
+        if ratio_rh < grab_threshold:
             grab_status['right_hand'] = True # right hand closed
 
          
@@ -34,7 +35,7 @@ def compute_grab_status(results):
 
         ratio_lh = distance(x_lh[2],x_lh[0],y_lh[2],y_lh[0])/distance(x_lh[1],x_lh[0],y_lh[1],y_lh[0])
 
-        if ratio_lh < 1.2:
+        if ratio_lh < grab_threshold:
             grab_status['left_hand'] = True # left hand closed
 
     return grab_status
