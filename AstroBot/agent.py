@@ -1,5 +1,6 @@
 
 import random
+import numpy as np
 
 
 class Agent:
@@ -24,8 +25,6 @@ class Agent:
             prediction = self.model(state)
             move=model.argmax(prediction).item()
         return move
-
-        return
 
     def remember(self,state,action,reward,next_state,done):
         self.memory.append((state,action,reward,next_state,done))#popleft if maxmemory is reach
