@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-#import pickle
+import pickle
 from matplotlib import style
-#import time
+import time
 
 from action_space import generate_movement_dict
 from agent import Agent
@@ -49,6 +49,35 @@ for episode in range(HM_EPISODES):
             # GET THE ACTION
             action = np.argmax(q_table[obs])
         else:
-            action = np.random.randint(0, 4)
+            action = np.random.randint(0, 3)
         # Take the action!
-        astronaut.action(action)
+        astronaut.do_action(action) # TODO: code the do_action function in Agent() which modifies the theta and rho
+    
+        #TODO: handling the reward: if the distance is smaller and the theta better, give a thumbs up
+
+        new_obs = astronaut.get_state()  # new observation
+        max_future_q = np.max(q_table[new_obs])  # max Q value for this new obs
+        current_q = q_table[obs][action]
+
+        if reward == winning_REWARD: # TODO: define the reward stuff
+            new_q = winning_REWARD
+        else:
+            new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
+        
+        episode_reward += reward
+
+        if reward == winning_REWARD or reward == losing_REWARD: # TODO: define the reward stuff
+            break
+
+        episode_rewards.append(episode_reward)
+        epsilon *= EPS_DECAY
+
+moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,))/SHOW_EVERY, mode='valid')
+
+plt.plot([i for i in range(len(moving_avg))], moving_avg)
+plt.ylabel(f"Reward {SHOW_EVERY}ma")
+plt.xlabel("episode #")
+plt.show()
+
+with open(f"qtable-{int(time.time())}.pickle", "wb") as f:
+    pickle.dump(q_table, f)
