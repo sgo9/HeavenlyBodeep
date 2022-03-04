@@ -6,5 +6,5 @@ raw_data/
 *.csv
 **/__pycache__/
 .env
-notebooks/
 *.png
+notebooks/notebooks_test/
