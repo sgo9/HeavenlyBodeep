@@ -13,6 +13,8 @@ def astronaut_detection(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     mask_astro = cv2.inRange(hsv, (15, 100, 20), (25, 255, 255))
     white_pixels = cv2.findNonZero(mask_astro)
+    if white_pixels is None:
+        return None,None
     white_pixels = np.reshape(white_pixels,(white_pixels.shape[0],2))
 
     astro_center = centeroidnp(white_pixels)
@@ -40,6 +42,9 @@ def station_polar_coordinates(image):
     list_xy = []
     astro_center = astronaut_detection(image)
 
+    if astro_center is None:
+        return None
+
     for c in cnts:
         area = cv2.contourArea(c)
         if area > 10:
@@ -55,6 +60,8 @@ def station_polar_coordinates(image):
     astronaut_index = dist.cdist([astro_center],list_xy).argmin(axis=1)[0]
     astronaut_coord = list_xy[astronaut_index]
     list_xy.pop(astronaut_index)
+    if len(list_xy) == 0:
+        return None,None
 
     # measure distances between the astronaut and other objects, return the min
     astronaut_x, astronaut_y = astronaut_coord
@@ -71,7 +78,6 @@ def station_polar_coordinates(image):
     if station_x-astronaut_y < 0:
         astronaut_station_angle = np.pi + astronaut_station_angle
 
-    print(astronaut_station_distance, int(astronaut_station_angle*180/np.pi))
     return astronaut_station_distance, astronaut_station_angle
     
 if __name__=="__main__":
