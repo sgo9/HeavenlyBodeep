@@ -35,7 +35,7 @@ def execute_movement(move, angle_correction):
     for player_position in move:
         update_vjoy(j, player_position, {}, angle_correction)
 
-log_dict = {'Id':[], 'Time': [], 'Move':[], 'Distance': [], 'Angle':[]}
+log_dict = {'Id':[], 'Time': [], 'Move':[], 'Distance': [], 'Angle':[], 'Astronaut_Angle':[]}
 
 training_time = 10
 
@@ -55,12 +55,13 @@ for _ in range(training_time):
 
     # observations
     log_dict['Id'].append(_)
-    log_dict['Time'].append(datetime.now())
+    log_dict['Time'].append(datetime.now()) # TODO try DateTime.Now.ToShortTimeString()
     log_dict['Move'].append(move_key)
     game_image = cv2.cvtColor(np.array(game_image), cv2.COLOR_RGB2BGR)
     distance, angle = station_polar_coordinates(game_image)
-    log_dict['Distance'].append(distance)
-    log_dict['Angle'].append(angle)
+    log_dict['Station_Distance'].append(distance)
+    log_dict['Station_Angle'].append(angle)
+    log_dict['Astronaut_Angle'].append(angle)
     sleep(1)
     print(datetime.now(), move_key, distance, angle)
 
