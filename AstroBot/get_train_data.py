@@ -35,7 +35,7 @@ def execute_movement(move, angle_correction):
     for player_position in move:
         update_vjoy(j, player_position, {}, angle_correction)
 
-log_dict = {'Id':[], 'Time': [], 'Move':[], 'Distance': [], 'Angle':[], 'Astronaut_Angle':[]}
+log_dict = {'Id':[], 'Time': [], 'Move':[], 'Station_Distance': [], 'Station_Angle':[], 'Astronaut_Angle':[]}
 
 training_time = 10
 

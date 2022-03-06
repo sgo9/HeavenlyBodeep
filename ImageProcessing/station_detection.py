@@ -14,7 +14,7 @@ def astronaut_detection(image):
     mask_astro = cv2.inRange(hsv, (15, 100, 20), (25, 255, 255))
     white_pixels = cv2.findNonZero(mask_astro)
     if white_pixels is None:
-        return None,None
+        return None
     white_pixels = np.reshape(white_pixels,(white_pixels.shape[0],2))
 
     astro_center = centeroidnp(white_pixels)
@@ -43,7 +43,7 @@ def station_polar_coordinates(image):
     astro_center = astronaut_detection(image)
 
     if astro_center is None:
-        return None
+        return None, None
 
     for c in cnts:
         area = cv2.contourArea(c)
@@ -57,11 +57,14 @@ def station_polar_coordinates(image):
         list_xy.append((x+w/2,y+h/2))
 
     # find the bounding box with the astronaut
+    print(astro_center, list_xy)
+    if len(list_xy) < 2:
+        return None,None
+        
     astronaut_index = dist.cdist([astro_center],list_xy).argmin(axis=1)[0]
     astronaut_coord = list_xy[astronaut_index]
     list_xy.pop(astronaut_index)
-    if len(list_xy) == 0:
-        return None,None
+
 
     # measure distances between the astronaut and other objects, return the min
     astronaut_x, astronaut_y = astronaut_coord
