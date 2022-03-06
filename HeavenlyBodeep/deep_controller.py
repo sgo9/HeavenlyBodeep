@@ -1,8 +1,10 @@
 #  vJoy, pyVJoy and x360ce
 # https://gamepad-tester.com/
 
-import pyvjoy
+from random import getrandbits
 from math import cos, sin
+import pyvjoy
+
 
 def coordinate_correction(x):
     """Return joystick coordinate between 0x0000 (0) and 0x8000 (32768)"""
@@ -13,13 +15,13 @@ def coordinate_correction(x):
     return int(x)
 
 
-def compute_buttons_value(a_command, grab_left, grab_right, legs_status, camera_auto_rotation=False):
+def compute_buttons_value(a_command, grab_left, grab_right, legs_status, reset_camera):
     """Return the decimal value corresponding to the binary mapping of buttons status
     a_command : b1 (2**0), grab_left : b5 (2**4), grab_right : b6 (2**5), legs : b7 + b8 (2**6+2**7)"""
-    return a_command * 1 + grab_left * 16 +  grab_right * 32 + legs_status * 192 + camera_auto_rotation * 4
+    return a_command * 1 + grab_left * 16 +  grab_right * 32 + legs_status * 192 + reset_camera * getrandbits(1) * 4 
 
 
-def update_vjoy(j, player_position, grab_status, angle_correction):
+def update_vjoy(j, player_position, grab_status, angle_correction, camera_auto_rotation=False):
     """Main function of deep_controller
     Update joystick status according to player position and grab status"""
 
@@ -44,8 +46,9 @@ def update_vjoy(j, player_position, grab_status, angle_correction):
         grab_left = grab_status.get('left_hand', False)
         grab_right = grab_status.get('right_hand', False)
         legs_status = player_position.get('legs_status', False)
+        reset_camera = player_position.get('x_command', False) or camera_auto_rotation
 
-        j.data.lButtons = compute_buttons_value(a_command, grab_left, grab_right, legs_status)
+        j.data.lButtons = compute_buttons_value(a_command, grab_left, grab_right, legs_status, reset_camera)
 
 
     j.update() # update method to push joystick attributes at the same time and avoid saturation
@@ -62,7 +65,8 @@ if __name__=="__main__":
     grab_left = False
     grab_right = True
     legs = True
-    j.data.lButtons = compute_buttons_value(a_command, grab_left, grab_right, legs)
+    camera_auto_rotation = True
+    j.data.lButtons = compute_buttons_value(a_command, grab_left, grab_right, legs, camera_auto_rotation)
     j.update()
 
     j.data.lButtons = 0
