@@ -14,7 +14,6 @@ import os
 import json
 from tensorflow.keras import models
 
-style.use("ggplot")
 
 q_path = os.path.join(os.path.dirname(__file__),"Q_tables")
 
@@ -32,7 +31,8 @@ epsilon = 0.9
 EPS_DECAY = 0.9998  # Every episode will be epsilon*EPS_DECAY
 SHOW_EVERY = 20  # how often to play through env visually.
 MAX_NB_MOVES = 50
-start_q_table = None # None or Filename
+start_q_table = None #'q_table_ep0.pickle' # None or Filename
+start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
 
 LEARNING_RATE = 0.1
 DISCOUNT = 0.95
@@ -42,16 +42,17 @@ SIZE_theta_station = 72 # angle discretized in 72 buckets of 5 degrees
 SIZE_actions = 3 # 3 possible actions
 winning_distance = 200
 
+theta_astro_range = [theta_astro*5*np.pi/180 for theta_astro in range(SIZE_theta_astro)]
+theta_station_range = [theta_station*5*np.pi/180 for theta_station in range(SIZE_theta_station)]
+
 if start_q_table is None:
     # initialize the q-table#
     q_table = {}
-    theta_astro_range = [theta_astro*5*np.pi/180 for theta_astro in range(SIZE_theta_astro)]
-    theta_station_range = [theta_station*5*np.pi/180 for theta_station in range(SIZE_theta_station)]
-    for theta_astro in range(SIZE_theta_astro):
-        for theta_station in range(SIZE_theta_station):
-            q_table[theta_astro*5*np.pi/180,theta_station*5*np.pi/180] = np.full(3,0)
+    for theta_astro in theta_astro_range:
+        for theta_station in theta_station_range:
+            q_table[theta_astro,theta_station] = np.full(3,0)
 else:
-    with open(start_q_table, "rb") as f:
+    with open(start_q_table_path, "r+b") as f:
         q_table = pickle.load(f)
 
 # start the training
@@ -145,6 +146,8 @@ for episode in range(HM_EPISODES):
     
 
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,))/SHOW_EVERY, mode='valid')
+
+style.use("ggplot")
 
 plt.plot([i for i in range(len(moving_avg))], moving_avg)
 plt.ylabel(f"Reward {SHOW_EVERY}ma")
