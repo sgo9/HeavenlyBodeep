@@ -5,22 +5,24 @@ import numpy as np
 import imutils
 from scipy.spatial import distance as dist
 
-from utils import centeroidnp
-from image_filter import bgr_color_filter
+from ImageProcessing.utils import centeroidnp
+from ImageProcessing.image_filter import bgr_color_filter
 
 def astronaut_detection(image):
     """Return the approximate coordinates of the astronaut"""
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     mask_astro = cv2.inRange(hsv, (15, 100, 20), (25, 255, 255))
     white_pixels = cv2.findNonZero(mask_astro)
+    if white_pixels is None:
+        return None
     white_pixels = np.reshape(white_pixels,(white_pixels.shape[0],2))
 
     astro_center = centeroidnp(white_pixels)
     return (int(astro_center[0]),int(astro_center[1]))
 
 
-def station_distance(image):
-    """Return the distance between astronaut and station, in pixels"""
+def station_polar_coordinates(image):
+    """Return the distance and angle in radians between astronaut and station, in pixels"""
 
     #filter blue colors to remove the planet in the background
     lower_blue = np.array([60, 35, 95])
@@ -40,6 +42,9 @@ def station_distance(image):
     list_xy = []
     astro_center = astronaut_detection(image)
 
+    if astro_center is None:
+        return None, None
+
     for c in cnts:
         area = cv2.contourArea(c)
         if area > 10:
@@ -52,14 +57,36 @@ def station_distance(image):
         list_xy.append((x+w/2,y+h/2))
 
     # find the bounding box with the astronaut
-    austronaut_index = dist.cdist([astro_center],list_xy).argmin(axis=1)[0]
-    austronaut_coord = list_xy[austronaut_index]
-    list_xy.pop(austronaut_index)
+    print(astro_center, list_xy)
+    if len(list_xy) < 2:
+        return None,None
+        
+    astronaut_index = dist.cdist([astro_center],list_xy).argmin(axis=1)[0]
+    astronaut_coord = list_xy[astronaut_index]
+    list_xy.pop(astronaut_index)
+
 
     # measure distances between the astronaut and other objects, return the min
-    s1 = np.array([austronaut_coord])
-    s2 = np.array(list_xy)
-    min_dist = dist.cdist(s1,np.array([centeroidnp(s2)])).min(axis=1)[0]
+    astronaut_x, astronaut_y = astronaut_coord
+    station_x, station_y = centeroidnp(np.array(list_xy))
 
-    return int(min_dist)
+    # compute distance
+    astronaut_station_distance = int(((station_x-astronaut_x)**2+(station_y-astronaut_y)**2)**0.5)
+
+    # compute angle
+    if station_y-astronaut_y==0:
+        astronaut_station_angle = np.pi/2
+    else:
+        astronaut_station_angle = round(np.arctan((station_x-astronaut_x)/(station_y-astronaut_y)),3)
+    if station_x-astronaut_y < 0:
+        astronaut_station_angle = np.pi + astronaut_station_angle
+
+    return astronaut_station_distance, astronaut_station_angle
     
+if __name__=="__main__":
+
+    image = cv2.imread('raw_data/120.png', cv2.IMREAD_COLOR)
+    cv2.imshow('image',image)
+    print(station_polar_coordinates(image))
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

@@ -55,10 +55,16 @@ def compute_player_position(results, discard_not_found=True):
     player_position['right_hand_angle'] = right_hand_angle
 
     # A command
-    player_position['a_command'] = (pt_15.x-pt_16.x)/normalization_factor < 0.35
+    player_position['a_command'] = (pt_15.x-pt_16.x)/normalization_factor < 0.35 and pt_15.y-pt_11.y > 0
 
-    # legs status
-    player_position['legs_status'] = min([abs(pt_25.y-pt_12.y), abs(pt_26.y-pt_11.y)])/normalization_factor < 1.3
+    # legs status : if one knee is close to the hip
+    player_position['legs_status'] = min([abs(pt_25.y-pt_12.y), abs(pt_26.y-pt_11.y)])/normalization_factor < 1.8
+    
+    # astrobot : if arms are closed
+    player_position['astro_bot'] = (pt_15.x-pt_16.x)/normalization_factor < -0.2 and pt_15.y-pt_11.y > 0
+
+    # X command : reset camera if shoulders are titled
+    player_position['x_command'] = abs((pt_11.x-pt_12.x)/(pt_11.y-pt_12.y)) < 2.1
 
     return player_position
 

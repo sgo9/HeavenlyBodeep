@@ -1,5 +1,6 @@
 
 import random
+import numpy as np
 
 from model import model_linear
 
@@ -25,8 +26,6 @@ class Agent:
             prediction = self.model.predict(state)
             #TODO move=prediction.argmax(prediction).item()
         return move
-
-        return
 
     def remember(self,state,action,reward,next_state,done):
         self.memory.append((state,action,reward,next_state,done))#popleft if maxmemory is reach
