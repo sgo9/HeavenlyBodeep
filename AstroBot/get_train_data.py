@@ -19,7 +19,6 @@ from tensorflow.keras import models
 # IgnoringStop ignoring tensorflow loading warnings (CUDA)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0' 
 
-
 # For VJoy output:
 j = pyvjoy.VJoyDevice(1)
 
@@ -37,7 +36,7 @@ def execute_movement(move, angle_correction):
 
 log_dict = {'Id':[], 'Time': [], 'Move':[], 'Station_Distance': [], 'Station_Angle':[], 'Astronaut_Angle':[]}
 
-training_time = 10
+training_time = 1000
 
 for _ in range(training_time):
 
