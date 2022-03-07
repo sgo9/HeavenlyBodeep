@@ -27,7 +27,7 @@ movement_dict = generate_movement_dict()
 
 HM_EPISODES = 200
 
-epsilon = 0.9
+epsilon = 0.7
 EPS_DECAY = 0.9998  # Every episode will be epsilon*EPS_DECAY
 SHOW_EVERY = 20  # how often to play through env visually.
 MAX_NB_MOVES = 50
@@ -136,7 +136,7 @@ for episode in range(HM_EPISODES):
 
         if distances[-1] < winning_distance: 
             break
-        print(f'episode:{episode} , move:{i},distance: {distances[-1]},old_q:{current_q}, new_Q:{new_q},random:{random}')
+        print(f'episode:{episode} , move:{i},distance: {distances[-1]},old_q:{round(current_q)}, new_Q:{round(new_q)},reward:{reward},random:{random}')
         
         
 
@@ -149,7 +149,7 @@ for episode in range(HM_EPISODES):
         with open(q_file, "w+b") as f:
             pickle.dump(q_table, f)
     
-    for i in range(15):
+    for i in range(30):
          action=np.random.randint(0,2)
          astronaut.do_action(action,j,np.random.choice(theta_astro_range))
     
