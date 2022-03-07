@@ -107,14 +107,11 @@ for episode in range(HM_EPISODES):
         if not new_astronaut_station_angle:
             new_astronaut_station_angle = np.random.choice(theta_station_range)
 
-        obs = (new_angle_astro/5*np.pi/180,new_astronaut_station_angle/5*np.pi/180) # new observation
-        print(theta_station_range)
-        print(theta_astro_range)
-        if obs[0] or obs[1] != None:
-            index_astro = (np.abs(np.array(theta_astro_range)-obs[0])).argmin()
-            index_station = (np.abs(np.array(theta_station_range)-obs[1])).argmin()
-            print(index_astro)
-            print(index_station)
+        tmp_obs = (new_angle_astro/5*np.pi/180,new_astronaut_station_angle/5*np.pi/180) # new observation
+
+        if tmp_obs[0] or tmp_obs[1] != None:
+            index_astro = (np.abs(np.array(theta_astro_range)-tmp_obs[0])).argmin()
+            index_station = (np.abs(np.array(theta_station_range)-tmp_obs[1])).argmin()
             new_obs = (theta_astro_range[index_astro],theta_station_range[index_station])
         else:
             pass
@@ -138,8 +135,8 @@ for episode in range(HM_EPISODES):
     episode_rewards.append(episode_reward)
     epsilon *= EPS_DECAY
     if episode%10==0:
-        q_file=os.path.join(q_path,f'q_table_{episode}.pickle')
-        with open(q_file, "wb") as f:
+        q_file=os.path.join(q_path,f'q_table_ep{episode}.pickle')
+        with open(q_file, "w+b") as f:
             pickle.dump(q_table, f)
     
     for i in range(15):
