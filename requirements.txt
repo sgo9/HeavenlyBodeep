@@ -28,6 +28,7 @@ s3fs
 six>=1.14
 pyvjoy
 opencv-python
+imutils
 
 #screenshot
 Pillow
