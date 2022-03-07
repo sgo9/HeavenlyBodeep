@@ -56,7 +56,7 @@ for _ in range(training_time):
     log_dict['Id'].append(_)
     log_dict['Time'].append(datetime.now()) # TODO try DateTime.Now.ToShortTimeString()
     log_dict['Move'].append(move_key)
-    game_image = cv2.cvtColor(np.array(game_image), cv2.COLOR_RGB2BGR)
+    game_image = cv2.cvtColor(np.array(game_image), cv2.COLOR_RGB2BGR) # TODO remove this line -- integrated in ImageProcessing
     distance, angle = station_polar_coordinates(game_image)
     log_dict['Station_Distance'].append(distance)
     log_dict['Station_Angle'].append(angle)
