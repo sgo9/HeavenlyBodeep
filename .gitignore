@@ -1,9 +1,10 @@
 *.egg-info
+*.png
+*.csv
 .coverage
 .ipynb_checkpoints
 .DS_Store
+.env
 raw_data/
 **/__pycache__/
-.env
-*.png
 notebooks/notebooks_test/

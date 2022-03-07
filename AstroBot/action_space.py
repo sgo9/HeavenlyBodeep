@@ -14,16 +14,14 @@ def generate_movement_dict(slow=100):
     """Return a dictionnaire of basic swim moves, slow down movement frame to match with game"""
     
     movement_chain = [
-        [0.2, 90],
-        [1, 180],
-        [1, 150],
-        [1, 120],
-        [1, 90],
-        [1, 60],
-        [1, 30],
-        [1, 0],
-        [0.5, 30],
-        [0.3, 60]
+        [0.8, 90],
+        [0.8, 150],
+        [0.3, 150],
+        [0.3, 110],
+        [0.3, 90],
+        [0.3, 70],
+        [0.5, 60],
+        [1, 90]
     ]
 
     movement_chain_slowed = [movement_chain[i//slow] for i in range(slow*len(movement_chain))]

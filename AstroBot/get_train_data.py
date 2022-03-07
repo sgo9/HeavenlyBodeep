@@ -27,16 +27,16 @@ model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'model.h5')
 model = models.load_model(model_path)
 
 
-movement_dict = generate_movement_dict(100)
+movement_dict = generate_movement_dict(1)
 
 def execute_movement(move, angle_correction):
-    print("arm_movement")
     for player_position in move:
         update_vjoy(j, player_position, {}, angle_correction)
+        sleep(0.1)
 
 log_dict = {'Id':[], 'Time': [], 'Move':[], 'Station_Distance': [], 'Station_Angle':[], 'Astronaut_Angle':[]}
 
-training_time = 1000
+training_time = 20
 
 for _ in range(training_time):
 
