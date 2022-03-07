@@ -32,7 +32,7 @@ EPS_DECAY = 0.9998  # Every episode will be epsilon*EPS_DECAY
 SHOW_EVERY = 20  # how often to play through env visually.
 MAX_NB_MOVES = 50
 start_q_table = None #'q_table_ep0.pickle' # None or Filename
-start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
+#start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
 
 LEARNING_RATE = 0.1
 DISCOUNT = 0.95
@@ -74,8 +74,10 @@ for episode in range(HM_EPISODES):
             distances.append(0)
     
     for i in range(MAX_NB_MOVES):
+        print(f'episode:{episode} , move:{i}')
         if initial_loop:
             obs = (np.random.choice(theta_astro_range),np.random.choice(theta_station_range))
+            new_angle_astro=np.random.choice(theta_astro_range)
             initial_loop = False
         else:
             obs = new_obs
@@ -88,7 +90,7 @@ for episode in range(HM_EPISODES):
             action = np.random.randint(0, 3)
         # Take the action!
         
-        astronaut.do_action(action,j,obs[0]) # code the do_action function in Agent() which modifies the theta and rho
+        astronaut.do_action(action,j,new_angle_astro) # code the do_action function in Agent() which modifies the theta and rho
     
         #handling the reward: if the distance is smaller and the theta better, give a thumbs up
         
@@ -133,6 +135,7 @@ for episode in range(HM_EPISODES):
         
 
     # before starting new epoch swim randomly
+    
     episode_rewards.append(episode_reward)
     epsilon *= EPS_DECAY
     if episode%10==0:
