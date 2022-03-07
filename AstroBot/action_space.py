@@ -1,5 +1,5 @@
 """Define possible actions of the astronaut during bot training"""
-from gevent import sleep
+#from gevent import sleep
 import pyvjoy
 import numpy as np
 from HeavenlyBodeep.deep_controller import update_vjoy

@@ -36,17 +36,17 @@ DISCOUNT = 0.95
 # return: {0:left_arm_move, 1: right_arm_move, 2: both_arm_move}
 movement_dict = generate_movement_dict()
 
-SIZE_theta = 72 # angle discretized in 72 buckets of 5 degrees
-SIZE_rho = 16 # distance within range 200 to 1000 pixels, 50 buckets
+SIZE_theta_astro = 72 # angle discretized in 72 buckets of 5 degrees
+SIZE_theta_station = 72 # distance within range 200 to 1000 pixels, 50 buckets
 SIZE_actions = 3 # 3 possible actions
 winning_distance=200
 
 if start_q_table is None:
     # initialize the q-table#
     q_table = {}
-    for theta in range(SIZE_theta):
-        for rho in range(SIZE_rho):
-                q_table[theta,rho] = np.full(3,0) #TODO: define the reward value, higher than reward to allow exploration
+    for theta_astro in range(SIZE_theta_astro):
+        for theta_station in range(SIZE_theta_station):
+                q_table[theta_astro*5,theta_station*5] = np.full(3,0) #TODO: define the reward value, higher than reward to allow exploration
 else:
     with open(start_q_table, "rb") as f:
         q_table = pickle.load(f)
@@ -57,16 +57,28 @@ for episode in range(HM_EPISODES):
     astronaut = Agent()
     episode_reward = 0
     distances=[]
+    initial_loop=True
     
     #We need to have at least 3 distances in order to be able to generate a reward
     while len(distances)!=3:
         image=pyautogui.screenshot()
         astronaut_station_distance, _=station_polar_coordinates(image)
-        distances.append(astronaut_station_distance)
-
-    for i in range(MAX_NB_MOVES): 
-        obs = astronaut.get_state()
-        image=pyautogui.screenshot()
+        if astronaut_station_distance:
+            distances.append(astronaut_station_distance)
+        else:
+            distances.append(0)
+    
+    for i in range(MAX_NB_MOVES):
+        if initial_loop:
+            image=pyautogui.screenshot()
+            astronaut_station_distance, astronaut_station_angle=station_polar_coordinates(image)
+            angle_astro=compute_angle_correction(image,model)
+            obs = (angle_astro//5,astronaut_station_angle//5)
+            initial_loop=False
+        else:
+            obs = new_obs
+        
+    
         
         if np.random.random() > epsilon:
             # GET THE ACTION
@@ -74,19 +86,25 @@ for episode in range(HM_EPISODES):
         else:
             action = np.random.randint(0, 3)
         # Take the action!
-        angle_correction=compute_angle_correction(image,model)
-        astronaut.do_action(action,j,angle_correction) # code the do_action function in Agent() which modifies the theta and rho
+        
+        astronaut.do_action(action,j,angle_astro) # code the do_action function in Agent() which modifies the theta and rho
     
         #handling the reward: if the distance is smaller and the theta better, give a thumbs up
         
-        astronaut_station_distance, _=station_polar_coordinates(image)
-        distances.append(astronaut_station_distance)
+        
+        if astronaut_station_distance:
+            distances.append(astronaut_station_distance)
+        else:
+            distances.append(0)
+
         distances=distances[1:]
         reward=2*distances[1]-distances[0]-distances[2]
 
+        new_image=pyautogui.screenshot()
+        new_astronaut_station_distance, new_astronaut_station_angle=station_polar_coordinates(image)
+        new_angle_astro=compute_angle_correction(image,model)
 
-
-        new_obs = astronaut.get_state()  # new observation
+        new_obs = (new_angle_astro//5,new_astronaut_station_angle//5) # new observation
         max_future_q = np.max(q_table[new_obs])  # max Q value for this new obs
         current_q = q_table[obs][action]
 
@@ -97,7 +115,7 @@ for episode in range(HM_EPISODES):
         
         episode_reward += reward
 
-        if distances[-1]<winning_distance: # TODO: define the reward stuff
+        if distances[-1]<winning_distance: 
             break
 
         
@@ -113,7 +131,7 @@ for episode in range(HM_EPISODES):
     
     for i in range(15):
          action=np.random.randint(0,2)
-         astronaut.do_action(action,j,angle_correction)
+         astronaut.do_action(action,j,angle_astro)
     
 
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,))/SHOW_EVERY, mode='valid')

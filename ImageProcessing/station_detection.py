@@ -23,7 +23,7 @@ def astronaut_detection(image):
 
 def station_polar_coordinates(image):
     """Return the distance and angle in radians between astronaut and station, in pixels"""
-
+    image= cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     #filter blue colors to remove the planet in the background
     lower_blue = np.array([60, 35, 95])
     upper_blue = np.array([180, 255, 255])
