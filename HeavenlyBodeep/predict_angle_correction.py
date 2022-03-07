@@ -22,7 +22,7 @@ from datetime import datetime
 
 
 def compute_angle_correction(game_image, model):
-    """Return the astronaut angle in radiant considering an image of the game
+    """Return the astronaut angle in radiant [0,2*pi] considering an image of the game 
     -------Args---------
     game_image - Must be PIL format (native format of pyautogui screenshots)
     model - must be a Tensorflow keras model, inputed by (None, 100, 100, 3) shape images
@@ -33,8 +33,9 @@ def compute_angle_correction(game_image, model):
     processed_image = game_image.crop((710,290,1210,790)).resize((100,100))
     cos_sin = model.predict(expand_dims(processed_image,0))
     angle = math.atan2(cos_sin[0,1], cos_sin[0,0])
-    # if angle < 0: angle += 2*math.pi
-    return angle
+    #Calculating angles's modulo
+    mod_angle = (angle + 2 * math.pi) % (2 * math.pi) 
+    return mod_angle
 
 
 
