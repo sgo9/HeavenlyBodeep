@@ -74,13 +74,7 @@ for episode in range(HM_EPISODES):
     
     for i in range(MAX_NB_MOVES):
         if initial_loop:
-            image = pyautogui.screenshot()
-            astronaut_station_distance, astronaut_station_angle = station_polar_coordinates(image)
-            angle_astro = compute_angle_correction(image,model)
-            obs = (angle_astro/5*np.pi/180,astronaut_station_angle/5*np.pi/180)
-            index_astro = (np.abs(theta_astro_range-obs[0])).argmin()
-            index_station = (np.abs(theta_station_range-obs[1])).argmin()
-            obs = (theta_astro_range[index_astro],theta_station_range[index_station])
+            obs = (np.random.choice(theta_astro_range),np.random.choice(theta_station_range))
             initial_loop = False
         else:
             obs = new_obs
@@ -93,7 +87,7 @@ for episode in range(HM_EPISODES):
             action = np.random.randint(0, 3)
         # Take the action!
         
-        astronaut.do_action(action,j,angle_astro) # code the do_action function in Agent() which modifies the theta and rho
+        astronaut.do_action(action,j,obs[0]) # code the do_action function in Agent() which modifies the theta and rho
     
         #handling the reward: if the distance is smaller and the theta better, give a thumbs up
         
@@ -107,24 +101,34 @@ for episode in range(HM_EPISODES):
         reward = 2*distances[1]-distances[0]-distances[2]
 
         new_image = pyautogui.screenshot()
-        new_astronaut_station_distance, new_astronaut_station_angle = station_polar_coordinates(image)
-        new_angle_astro = compute_angle_correction(image,model)
+        new_astronaut_station_distance, new_astronaut_station_angle = station_polar_coordinates(new_image)
+        new_angle_astro = compute_angle_correction(new_image,model)
 
-        new_obs = (new_angle_astro/5*np.pi/180,new_astronaut_station_angle/5*np.pi/180) # new observation
-        index_astro = (np.abs(theta_astro_range-new_obs[0])).argmin()
-        index_station = (np.abs(theta_station_range-new_obs[1])).argmin()
-        new_obs = (theta_astro_range[index_astro],theta_station_range[index_station])
+        if not new_astronaut_station_angle:
+            new_astronaut_station_angle = np.random.choice(theta_station_range)
+
+        obs = (new_angle_astro/5*np.pi/180,new_astronaut_station_angle/5*np.pi/180) # new observation
+        print(theta_station_range)
+        print(theta_astro_range)
+        if obs[0] or obs[1] != None:
+            index_astro = (np.abs(np.array(theta_astro_range)-obs[0])).argmin()
+            index_station = (np.abs(np.array(theta_station_range)-obs[1])).argmin()
+            print(index_astro)
+            print(index_station)
+            new_obs = (theta_astro_range[index_astro],theta_station_range[index_station])
+        else:
+            pass
         max_future_q = np.max(q_table[new_obs])  # max Q value for this new obs
         current_q = q_table[obs][action]
 
-        if distances[-1]<winning_distance: 
+        if distances[-1] < winning_distance: 
             new_q = 10_000 #TODO: to be validated once we have a better understanding of reward scale
         else:
             new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
         
         episode_reward += reward
 
-        if distances[-1]<winning_distance: 
+        if distances[-1] < winning_distance: 
             break
 
         
@@ -140,7 +144,7 @@ for episode in range(HM_EPISODES):
     
     for i in range(15):
          action=np.random.randint(0,2)
-         astronaut.do_action(action,j,angle_astro)
+         astronaut.do_action(action,j,np.random.choice(theta_astro_range))
     
 
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,))/SHOW_EVERY, mode='valid')
