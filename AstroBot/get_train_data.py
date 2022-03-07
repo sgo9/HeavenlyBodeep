@@ -60,7 +60,7 @@ for _ in range(training_time):
     distance, angle = station_polar_coordinates(game_image)
     log_dict['Station_Distance'].append(distance)
     log_dict['Station_Angle'].append(angle)
-    log_dict['Astronaut_Angle'].append(angle)
+    log_dict['Astronaut_Angle'].append(angle_correction)
     sleep(1)
     print(datetime.now(), move_key, distance, angle)
 

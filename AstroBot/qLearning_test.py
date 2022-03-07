@@ -37,7 +37,7 @@ DISCOUNT = 0.95
 movement_dict = generate_movement_dict()
 
 SIZE_theta_astro = 72 # angle discretized in 72 buckets of 5 degrees
-SIZE_theta_station = 72 # distance within range 200 to 1000 pixels, 50 buckets
+SIZE_theta_station = 72 # angle discretized in 72 buckets of 5 degrees
 SIZE_actions = 3 # 3 possible actions
 winning_distance=200
 
@@ -46,7 +46,7 @@ if start_q_table is None:
     q_table = {}
     for theta_astro in range(SIZE_theta_astro):
         for theta_station in range(SIZE_theta_station):
-                q_table[theta_astro*5,theta_station*5] = np.full(3,0) #TODO: define the reward value, higher than reward to allow exploration
+                q_table[theta_astro*5*np.pi/180,theta_station*5*np.pi/180] = np.full(3,0) #TODO: define the reward value, higher than reward to allow exploration
 else:
     with open(start_q_table, "rb") as f:
         q_table = pickle.load(f)
@@ -73,7 +73,7 @@ for episode in range(HM_EPISODES):
             image=pyautogui.screenshot()
             astronaut_station_distance, astronaut_station_angle=station_polar_coordinates(image)
             angle_astro=compute_angle_correction(image,model)
-            obs = (angle_astro//5,astronaut_station_angle//5)
+            obs = (angle_astro/5*np.pi/180,astronaut_station_angle/5*np.pi/180)
             initial_loop=False
         else:
             obs = new_obs
@@ -104,7 +104,7 @@ for episode in range(HM_EPISODES):
         new_astronaut_station_distance, new_astronaut_station_angle=station_polar_coordinates(image)
         new_angle_astro=compute_angle_correction(image,model)
 
-        new_obs = (new_angle_astro//5,new_astronaut_station_angle//5) # new observation
+        new_obs = (new_angle_astro/5*np.pi/180,new_astronaut_station_angle/5*np.pi/180) # new observation
         max_future_q = np.max(q_table[new_obs])  # max Q value for this new obs
         current_q = q_table[obs][action]
 
