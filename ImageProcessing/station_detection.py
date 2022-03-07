@@ -57,7 +57,6 @@ def station_polar_coordinates(image):
         list_xy.append((x+w/2,y+h/2))
 
     # find the bounding box with the astronaut
-    print(astro_center, list_xy)
     if len(list_xy) < 2:
         return None,None
         
@@ -78,7 +77,7 @@ def station_polar_coordinates(image):
         astronaut_station_angle = np.pi/2
     else:
         astronaut_station_angle = round(np.arctan((station_x-astronaut_x)/(station_y-astronaut_y)),3)
-    if station_x-astronaut_y < 0:
+    if station_x-astronaut_x > 0:
         astronaut_station_angle = np.pi + astronaut_station_angle
 
     return astronaut_station_distance, astronaut_station_angle
