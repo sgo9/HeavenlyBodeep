@@ -10,6 +10,7 @@ from agent import Agent
 style.use("ggplot")
 
 HM_EPISODES = 200
+
 epsilon = 0.9
 EPS_DECAY = 0.9998  # Every episode will be epsilon*EPS_DECAY
 SHOW_EVERY = 20  # how often to play through env visually.
