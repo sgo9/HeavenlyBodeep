@@ -108,8 +108,8 @@ for episode in range(HM_EPISODES):
             distances.append(0)
 
         distances = distances[1:]
-        reward = 2*distances[1]-distances[0]-distances[2]
-
+        #reward = 2*distances[1]-distances[0]-distances[2]
+        reward=-distances[0]
 
 
         if not new_astronaut_station_angle:
