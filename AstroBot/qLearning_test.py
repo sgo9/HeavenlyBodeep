@@ -74,7 +74,9 @@ for episode in range(HM_EPISODES):
             distances.append(0)
     
     for i in range(MAX_NB_MOVES):
-        print(f'episode:{episode} , move:{i}')
+        
+        
+
         if initial_loop:
             obs = (np.random.choice(theta_astro_range),np.random.choice(theta_station_range))
             new_angle_astro=np.random.choice(theta_astro_range)
@@ -82,9 +84,10 @@ for episode in range(HM_EPISODES):
         else:
             obs = new_obs
         
-            
+        random=False
         if np.random.random() > epsilon:
             # GET THE ACTION
+            random=True
             action = np.argmax(q_table[obs])
         else:
             action = np.random.randint(0, 3)
@@ -126,11 +129,13 @@ for episode in range(HM_EPISODES):
         else:
             new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
         
+        q_table[obs][action]=new_q
+
         episode_reward += reward
 
         if distances[-1] < winning_distance: 
             break
-
+        print(f'episode:{episode} , move:{i},distance: {distances[-1]},old_q:{current_q}, new_Q:{new_q},random:{random}')
         
         
 
