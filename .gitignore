@@ -1,6 +1,7 @@
 *.egg-info
 *.png
 *.csv
+*.jpg
 .coverage
 .ipynb_checkpoints
 .DS_Store
