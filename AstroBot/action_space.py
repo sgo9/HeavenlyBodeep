@@ -10,18 +10,15 @@ j = pyvjoy.VJoyDevice(1)
 
 # simplified action space - 3 moves
 
-def generate_movement_dict(slow=100):
+def generate_movement_dict(slow=2):
     """Return a dictionnaire of basic swim moves, slow down movement frame to match with game"""
     
     movement_chain = [
-        [0.8, 90],
-        [0.8, 150],
-        [0.3, 150],
-        [0.3, 110],
-        [0.3, 90],
-        [0.3, 70],
-        [0.5, 60],
-        [1, 90]
+        [0, 90],
+        [1, 150],
+        [1, 120],
+        [0.5, 105],
+        [0, 90]
     ]
 
     movement_chain_slowed = [movement_chain[i//slow] for i in range(slow*len(movement_chain))]
