@@ -82,10 +82,12 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         astronaut_station_angle = np.pi + astronaut_station_angle
 
     if screenshot_saved:
-        line=cv2.line(cnts,(astronaut_x, astronaut_y), (station_x, station_y),(0, 255, 0), 5)
-        image_path=os.path.join(os.path.dirname(__file__),'AstroBot','Screenshot',image_name)
+        start_point = (int(astronaut_x),int(astronaut_y))
+        end_point = (int(station_x),int(station_y))
+        line = cv2.line(edged,start_point, end_point, (255,0,0), 2)   
+        image_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'AstroBot','Screenshot',f'{image_name}.jpg')
         cv2.imwrite(image_path, line)
-        
+
     return astronaut_station_distance, astronaut_station_angle
     
 if __name__=="__main__":
