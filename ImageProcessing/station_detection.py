@@ -56,6 +56,7 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         
         x,y,w,h = rect
         list_xy.append((x+w/2,y+h/2))
+        cv2.rectangle(mask,(x,y),(x+w,y+h),(255,0,0),1)
 
     # find the bounding box with the astronaut
     if len(list_xy) < 2:
@@ -77,15 +78,17 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     if station_y-astronaut_y==0:
         astronaut_station_angle = np.pi/2
     else:
-        astronaut_station_angle = round(np.arctan((station_x-astronaut_x)/(station_y-astronaut_y)),3)
+        astronaut_station_angle = round(np.arctan((astronaut_x-station_x)/(station_y-astronaut_y)),3)
     if station_x-astronaut_x > 0:
         astronaut_station_angle = np.pi + astronaut_station_angle
 
     if screenshot_saved:
-        line=cv2.line(cnts,(astronaut_x, astronaut_y), (station_x, station_y),(0, 255, 0), 5)
-        image_path=os.path.join(os.path.dirname(__file__),'AstroBot','Screenshot',image_name)
+        start_point = (int(astronaut_x),int(astronaut_y))
+        end_point = (int(station_x),int(station_y))
+        line = cv2.line(mask,start_point, end_point, (255,0,0), 2)   
+        image_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'AstroBot','Screenshot',f'{image_name}.jpg')
         cv2.imwrite(image_path, line)
-        
+
     return astronaut_station_distance, astronaut_station_angle
     
 if __name__=="__main__":
