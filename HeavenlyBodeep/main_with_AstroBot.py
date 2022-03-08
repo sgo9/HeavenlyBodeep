@@ -1,5 +1,4 @@
-from dis import dis
-from turtle import update
+from black import main
 import matplotlib.pyplot as plt
 import pyvjoy
 import cv2
@@ -11,6 +10,14 @@ import pickle
 from AstroBot.agent import Agent
 import numpy as np
 from ImageProcessing.station_detection import station_polar_coordinates
+from predict_player_position import compute_player_position
+from predict_grab_status import compute_grab_status
+from deep_controller_class import DeepController
+from predict_angle_correction import compute_angle_correction
+from tensorflow.keras import models
+
+
+
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -18,15 +25,12 @@ mp_holistic = mp.solutions.holistic
 
 # Ignoring tensorflow loading warnings (CUDA)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-from tensorflow.keras import models
+
 
 # IgnoringStop ignoring tensorflow loading warnings (CUDA)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0' 
 
-from predict_player_position import compute_player_position
-from predict_grab_status import compute_grab_status
-from deep_controller import update_vjoy
-from predict_angle_correction import compute_angle_correction
+
 
 # For webcam input:
 cap = cv2.VideoCapture(0)
@@ -59,25 +63,28 @@ if mode_selection == 3: # predict angle correction mpde
   model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'model.h5')
   model = models.load_model(model_path)
 
+gamepad=DeepController()
 
 #AstroBot Inititalization
 astrobot_isactive=False
-start_q_table ='q_table_ep0.pickle' # None or Filename
-start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
+
 SIZE_theta_astro = 72 # angle discretized in 72 buckets of 5 degrees
 SIZE_theta_station = 72 # angle discretized in 72 buckets of 5 degrees
 theta_astro_range = [theta_astro*5*np.pi/180 for theta_astro in range(SIZE_theta_astro)]
 theta_station_range = [theta_station*5*np.pi/180 for theta_station in range(SIZE_theta_station)]
 astronaut=Agent()
-with open(start_q_table_path, "r+b") as f:
-  q_table = pickle.load(f)
+#TODO once pickle file available uncomment file below
+#start_q_table ='q_table_ep0.pickle' # None or Filename
+#start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
+# with open(start_q_table_path, "r+b") as f:
+#   q_table = pickle.load(f)
 
 
 with mp_holistic.Holistic(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as holistic:
   while cap.isOpened():
-
+    print(gamepad.right_hand_coordinate_y,gamepad.right_hand_coordinate_x,gamepad.left_hand_coordinate_y,gamepad.left_hand_coordinate_x)
     #print(datetime.now().second) # TODO print timestamp for dev, remove for prod
 
     success, image = cap.read()
@@ -110,7 +117,7 @@ with mp_holistic.Holistic(
       #From screenshot get angle of astronaut
       angle_correction = compute_angle_correction(image_game, model)
 
-      #From those angle retreive closest discrete values in angle_range
+      #From those angles retreive closest discrete value in angle_range
       tmp_obs = (angle_correction/5*np.pi/180,astronaut_station_angle/5*np.pi/180)
       index_astro = (np.abs(np.array(theta_astro_range)-tmp_obs[0])).argmin()
       index_station = (np.abs(np.array(theta_station_range)-tmp_obs[1])).argmin()
@@ -121,7 +128,7 @@ with mp_holistic.Holistic(
       astronaut.do_action(action,j,angle_correction)
       
       
-      #If station is no_longer visible
+      #If station is no_longer visible then deactivate astrobot
       if not astronaut_station_distance or astronaut_station_distance<=250:
         astrobot_isactive=False
       else:
@@ -135,11 +142,12 @@ with mp_holistic.Holistic(
         angle_correction = 0 # do not compute angle correction
 
       if mode_selection == 2: # reset angle correction
-        update_vjoy(j, player_position, grab_status, angle_correction, camera_auto_rotation=True)
+        gamepad.update_vjoy(player_position, grab_status, angle_correction, camera_auto_rotation=True)
       else:
-        update_vjoy(j, player_position, grab_status, angle_correction, camera_auto_rotation=False)
+        gamepad.update_vjoy(player_position, grab_status, angle_correction, camera_auto_rotation=False)
 
 
+   
     # Draw landmark annotation on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
