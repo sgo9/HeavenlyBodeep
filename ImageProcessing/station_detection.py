@@ -78,7 +78,7 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     if station_y-astronaut_y==0:
         astronaut_station_angle = np.pi/2
     else:
-        astronaut_station_angle = round(np.arctan((station_x-astronaut_x)/(station_y-astronaut_y)),3)
+        astronaut_station_angle = round(np.arctan((astronaut_x-station_x)/(station_y-astronaut_y)),3)
     if station_x-astronaut_x > 0:
         astronaut_station_angle = np.pi + astronaut_station_angle
 
