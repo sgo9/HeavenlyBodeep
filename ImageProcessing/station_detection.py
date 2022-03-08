@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import imutils
 from scipy.spatial import distance as dist
+import os
 
 from ImageProcessing.utils import centeroidnp
 from ImageProcessing.image_filter import bgr_color_filter
@@ -21,7 +22,7 @@ def astronaut_detection(image):
     return (int(astro_center[0]),int(astro_center[1]))
 
 
-def station_polar_coordinates(image):
+def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     """Return the distance and angle in radians between astronaut and station, in pixels"""
     image= cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     #filter blue colors to remove the planet in the background
@@ -79,6 +80,10 @@ def station_polar_coordinates(image):
         astronaut_station_angle = round(np.arctan((station_x-astronaut_x)/(station_y-astronaut_y)),3)
     if station_x-astronaut_x > 0:
         astronaut_station_angle = np.pi + astronaut_station_angle
+
+    if screenshot_saved:
+        line=cv2.line(cnts,(astronaut_x, astronaut_y), (station_x, station_y),(0, 255, 0), 5)
+        image_path=os.path.join(os.path.dirname(__file__),'AstroBot','Screenshot',image_name)
 
     return astronaut_station_distance, astronaut_station_angle
     
