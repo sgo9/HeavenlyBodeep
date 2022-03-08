@@ -99,7 +99,7 @@ for episode in range(HM_EPISODES):
         #handling the reward: if the distance is smaller and the theta better, give a thumbs up
         
         new_image = pyautogui.screenshot()
-        new_astronaut_station_distance, new_astronaut_station_angle = station_polar_coordinates(new_image,screenshot_saved=True,image_name=f'screenshot_{i}')
+        new_astronaut_station_distance, new_astronaut_station_angle = station_polar_coordinates(new_image,screenshot_saved=True,image_name=f'screenshot_ep{episode}_move{i}')
         new_angle_astro = compute_angle_correction(new_image,model)
         
         if new_astronaut_station_distance:

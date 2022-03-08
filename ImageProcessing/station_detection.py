@@ -56,6 +56,7 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         
         x,y,w,h = rect
         list_xy.append((x+w/2,y+h/2))
+        cv2.rectangle(mask,(x,y),(x+w,y+h),(255,0,0),1)
 
     # find the bounding box with the astronaut
     if len(list_xy) < 2:
@@ -84,7 +85,7 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     if screenshot_saved:
         start_point = (int(astronaut_x),int(astronaut_y))
         end_point = (int(station_x),int(station_y))
-        line = cv2.line(edged,start_point, end_point, (255,0,0), 2)   
+        line = cv2.line(mask,start_point, end_point, (255,0,0), 2)   
         image_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'AstroBot','Screenshot',f'{image_name}.jpg')
         cv2.imwrite(image_path, line)
 
