@@ -51,7 +51,10 @@ def train_dummy_bot(move_number):
         astronaut_angle = compute_angle_correction(game_image, model)
         game_image = cv2.cvtColor(np.array(game_image), cv2.COLOR_RGB2BGR) # TODO remove this line -- integrated in ImageProcessing
         station_distance, station_angle = station_polar_coordinates(game_image)
-        image_name = f'ss_m{_}_sd{station_distance}_sa{int(station_angle*180/np.pi)}_aa{int(astronaut_angle*180/np.pi)}'
+        if station_distance is None or station_angle is None:
+            image_name = f"ss_m{_}_sd{'undefined'}_sa{'undefined'}_aa{int(astronaut_angle*180/np.pi)}"
+        else:
+            image_name = f'ss_m{_}_sd{station_distance}_sa{int(station_angle*180/np.pi)}_aa{int(astronaut_angle*180/np.pi)}'
         station_polar_coordinates(game_image, screenshot_saved=True, image_name=image_name)
 
         # station angle memory
