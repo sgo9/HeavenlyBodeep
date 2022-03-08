@@ -37,6 +37,8 @@ class DeepController():
             # joystick position (hands distance and position)
             new_left_hand_coordinate_x = int(0x4000)-(player_position['left_hand_dist'] * sin(player_position['left_hand_angle']-angle_correction))*int(0x4000)
             new_left_hand_coordinate_y = (player_position['left_hand_dist'] * -cos(player_position['left_hand_angle']-angle_correction))*int(0x4000)+int(0x4000)
+            new_left_hand_coordinate_x=coordinate_correction(new_left_hand_coordinate_x)
+            new_left_hand_coordinate_y=coordinate_correction(new_left_hand_coordinate_y)
 
             #Get difference of postion
             new_left_hand_coordinate_x-=self.left_hand_coordinate_x
@@ -51,6 +53,8 @@ class DeepController():
 
             new_right_hand_coordinate_x = int(0x4000)+(player_position['right_hand_dist'] * sin(player_position['right_hand_angle']+angle_correction))*int(0x4000)
             new_right_hand_coordinate_y = (player_position['right_hand_dist'] * -cos(player_position['right_hand_angle']+angle_correction))*int(0x4000)+int(0x4000)
+            new_right_hand_coordinate_x=coordinate_correction(new_right_hand_coordinate_x)
+            new_right_hand_coordinate_y=coordinate_correction(new_right_hand_coordinate_y)
             new_right_hand_coordinate_x-=self.right_hand_coordinate_x
             new_right_hand_coordinate_y-=self.right_hand_coordinate_y
 

@@ -145,7 +145,7 @@ with mp_holistic.Holistic(
         gamepad.update_vjoy(player_position, grab_status, angle_correction, camera_auto_rotation=True)
       else:
         gamepad.update_vjoy(player_position, grab_status, angle_correction, camera_auto_rotation=False)
-
+        
 
    
     # Draw landmark annotation on the image.
