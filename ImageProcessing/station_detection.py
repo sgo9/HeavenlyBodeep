@@ -7,6 +7,8 @@ from scipy.spatial import distance as dist
 import os
 from math import atan2
 
+import matplotlib.pyplot as plt
+
 from ImageProcessing.utils import centeroidnp
 from ImageProcessing.image_filter import bgr_color_filter
 
@@ -25,15 +27,23 @@ def astronaut_detection(image):
 
 def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     """Return the distance and angle in radians between astronaut and station, in pixels"""
-    image= cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    #image= cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+
     #filter blue colors to remove the planet in the background
-    lower_blue = np.array([60, 35, 95])
-    upper_blue = np.array([180, 255, 255])
-    mask = bgr_color_filter(image, lower_blue, upper_blue)
+    hsv_im = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    mask_planet = (hsv_im[:,:,0] < 80) 
+    mask = hsv_im * mask_planet.reshape(1080,1920,1)
+    im_bgr = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
+    im_gray = cv2.cvtColor(im_bgr, cv2.COLOR_BGR2GRAY)
+    
+    # lower_blue = np.array([60, 35, 95])
+    # upper_blue = np.array([180, 255, 255])
+    # mask = bgr_color_filter(image, lower_blue, upper_blue)
 
     # perform a dilation + erosion to close gaps in between object edges
-    edged = cv2.dilate(mask, None, iterations=1)
-    edged = cv2.erode(edged, None, iterations=1)
+    # edged = cv2.dilate(im_gray, None, iterations=1)
+    kernel = np.ones((5, 5), np.uint8)
+    edged = cv2.erode(im_gray, kernel, iterations=1)
 
     # find contours in the edge map
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -58,6 +68,7 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         x,y,w,h = rect
         list_xy.append((x+w/2,y+h/2))
         cv2.rectangle(mask,(x,y),(x+w,y+h),(255,0,0),1)
+    cv2.imshow(f'mask{i}',mask)
 
     # find the bounding box with the astronaut
     if len(list_xy) < 2:
@@ -97,9 +108,15 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     return astronaut_station_distance, astronaut_station_angle
     
 if __name__=="__main__":
-
-    image = cv2.imread('raw_data/120.png', cv2.IMREAD_COLOR)
-    cv2.imshow('image',image)
-    print(station_polar_coordinates(image, screenshot_saved=True, image_name='test'))
+    path = 'HeavenlyBodeep/raw_data/classifier/out/'
+    for i in range(14,124):
+        image_path = path+f'{i}.png'
+        try: 
+            image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+        except:
+            pass
+        plt.imshow(image)
+        #cv2.imshow('image',image)
+        print(station_polar_coordinates(image, screenshot_saved=True, image_name='test'))
     cv2.waitKey(0)
     cv2.destroyAllWindows()
