@@ -44,15 +44,23 @@ class DeepController():
                 #self.left_hand_coordinate_x=int(0x4000)
                 self.j.data.wAxisX = int(0x4000)
             else:
+                #self.left_hand_coordinate_x=new_left_hand_coordinate_x
+                old_left_hand_coordinate_x=self.left_hand_coordinate_x
                 self.left_hand_coordinate_x=new_left_hand_coordinate_x
-                self.j.data.wAxisX = self.left_hand_coordinate_x
+                new_left_hand_coordinate_x-=old_left_hand_coordinate_x
+                new_left_hand_coordinate_x=coordinate_correction(int(0x4000)+new_left_hand_coordinate_x)
+                self.j.data.wAxisX = new_left_hand_coordinate_x
             
             if abs(new_left_hand_coordinate_y-self.left_hand_coordinate_y)<self.threshold_movement:
                 #self.left_hand_coordinate_y=int(0x4000)
                 self.j.data.wAxisY = int(0x4000)
             else:
+                #self.left_hand_coordinate_y=new_left_hand_coordinate_y
+                old_left_hand_coordinate_y=self.left_hand_coordinate_y
                 self.left_hand_coordinate_y=new_left_hand_coordinate_y
-                self.j.data.wAxisY = self.left_hand_coordinate_y
+                new_left_hand_coordinate_y-=old_left_hand_coordinate_y
+                new_left_hand_coordinate_y=coordinate_correction(int(0x4000)+new_left_hand_coordinate_y)
+                self.j.data.wAxisY = new_left_hand_coordinate_y
 
             new_right_hand_coordinate_y=coordinate_correction(int(0x4000)+(player_position['right_hand_dist'] * sin(player_position['right_hand_angle']+angle_correction))*int(0x4000))
             new_right_hand_coordinate_x =coordinate_correction((player_position['right_hand_dist'] * -cos(player_position['right_hand_angle']+angle_correction))*int(0x4000)+int(0x4000))
@@ -61,15 +69,23 @@ class DeepController():
                 #self.right_hand_coordinate_x=int(0x4000)
                 self.j.data.wAxisXRot = int(0x4000)
             else:
+                #self.right_hand_coordinate_x=new_right_hand_coordinate_x
+                old_right_hand_coordinate_x=self.right_hand_coordinate_x
                 self.right_hand_coordinate_x=new_right_hand_coordinate_x
-                self.j.data.wAxisXRot = self.right_hand_coordinate_x 
+                new_right_hand_coordinate_x-=old_right_hand_coordinate_x
+                new_right_hand_coordinate_x=coordinate_correction(int(0x4000)+new_right_hand_coordinate_x)
+                self.j.data.wAxisXRot = new_right_hand_coordinate_x
             
             if abs(new_right_hand_coordinate_y-self.right_hand_coordinate_y)<self.threshold_movement:
                 #self.right_hand_coordinate_y=int(0x4000)
                 self.j.data.wAxisYRot = int(0x4000)  
             else:
+                #self.right_hand_coordinate_y=new_right_hand_coordinate_y
+                old_right_hand_coordinate_y=self.right_hand_coordinate_y
                 self.right_hand_coordinate_y=new_right_hand_coordinate_y
-                self.j.data.wAxisYRot = self.right_hand_coordinate_y
+                new_right_hand_coordinate_y-=old_right_hand_coordinate_y
+                new_right_hand_coordinate_y=coordinate_correction(int(0x4000)+new_right_hand_coordinate_y)
+                self.j.data.wAxisYRot = new_right_hand_coordinate_y
                         
             
             
