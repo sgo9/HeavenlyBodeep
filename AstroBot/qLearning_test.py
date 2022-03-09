@@ -139,12 +139,15 @@ for episode in range(HM_EPISODES):
 
             if distances[-1] < winning_distance: 
                 break
-            print(f'episode:{episode} , move:{i},distance: {distances[-1]},old_q:{round(current_q)}, new_Q:{round(new_q)},reward:{reward},random:{random}')
+            print(f'episode:{episode}, move:{i}, distance:{distances[-1]}, old_q:{round(current_q)}, new_Q:{round(new_q)}, reward:{reward}, random:{random}')
         
         else:
             chevron=chevron_angle(new_image)
-            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron, new_angle_astro)
-        
+            if chevron:
+                astronaut.chevron_angle = chevron
+            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,astronaut.chevron_angle, new_angle_astro)
+            astronaut.do_action(action,j,new_angle_astro)
+            print('no distance - dummy bot move')
 
     # before starting new epoch swim randomly
     
@@ -161,11 +164,15 @@ for episode in range(HM_EPISODES):
         new_angle_astro = compute_angle_correction(new_image,model)
         if new_astronaut_station_distance:
             action=np.random.randint(0,2)
-            astronaut.do_action(action,j,np.random.choice(theta_astro_range))
+            astronaut.do_action(action,j,new_angle_astro)
+            print('station too close - random move')
         else:
+            print('station too close - but random move interrupted')
             chevron=chevron_angle(new_image)
-            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron, new_angle_astro)
-
+            if chevron:
+                astronaut.chevron_angle = chevron
+            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle, astronaut.chevron_angle, new_angle_astro)
+            astronaut.do_action(action,j,new_angle_astro)
     
 
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,))/SHOW_EVERY, mode='valid')

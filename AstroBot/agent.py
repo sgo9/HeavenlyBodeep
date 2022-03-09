@@ -13,6 +13,7 @@ class Agent:
         self.move_dict = generate_movement_dict(1)
         self.astronaut_station_distance=0
         self.astronaut_station_angle=0
+        self.chevron_angle=0
         #self.trainer=QTrainer(self.model,lr=LR,gamma=self.gamma) 
         pass
 
