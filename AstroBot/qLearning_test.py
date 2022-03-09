@@ -145,7 +145,7 @@ for episode in range(HM_EPISODES):
         
         else:
             chevron=chevron_angle(new_image)
-            dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron)
+            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron)
         
 
     # before starting new epoch swim randomly
