@@ -30,7 +30,7 @@ def compute_angle_correction(game_image, model):
     ------Output---------
     outputs the angle (rad) of the astronaut"""
 
-    processed_image = game_image.crop((710,290,1210,790)).resize((100,100))
+    processed_image = game_image.crop((690,270,1190,770)).resize((100,100))
     cos_sin = model.predict(expand_dims(processed_image,0))
     angle = math.atan2(cos_sin[0,1], cos_sin[0,0])
     #Calculating angles's modulo
