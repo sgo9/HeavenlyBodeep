@@ -50,7 +50,13 @@ class DeepController():
                 #self.left_hand_coordinate_x=int(0x4000)
                 
                 if self.sameLeftx>self.inertia_loop:
-                    self.j.data.wAxisX = int(0x4000)
+                    if self.left_hand_coordinate_x<int(0x4000):
+                        self.j.data.wAxisX = int(0x4000)-int(0.10*self.left_hand_coordinate_x)
+                    elif self.left_hand_coordinate_x>int(0x4000):
+                        self.j.data.wAxisX = int(0x4000)+int(0.10*self.left_hand_coordinate_x)
+                    else:
+                        self.j.data.wAxisX = int(0x4000)
+
                 else:
                     self.j.data.wAxisX=self.left_hand_coordinate_x
                 self.sameLeftx+=1
@@ -67,7 +73,12 @@ class DeepController():
             if abs(new_left_hand_coordinate_y-self.left_hand_coordinate_y)<self.threshold_movement:
                 #self.left_hand_coordinate_y=int(0x4000)
                 if self.sameLefty>self.inertia_loop:
-                    self.j.data.wAxisY = int(0x4000)
+                    if self.left_hand_coordinate_y<int(0x4000):
+                        self.j.data.wAxisY = int(0x4000)-int(0.1*self.left_hand_coordinate_y)
+                    elif self.left_hand_coordinate_y>int(0x4000):
+                        self.j.data.wAxisY = int(0x4000)+int(0.1*self.left_hand_coordinate_y)
+                    else:
+                        self.j.data.wAxisX = int(0x4000)
                 else:
                     self.j.data.wAxisY=self.left_hand_coordinate_y
                 self.sameLefty+=1
@@ -88,7 +99,12 @@ class DeepController():
             if abs(new_right_hand_coordinate_x-self.right_hand_coordinate_x)<self.threshold_movement:
                 #self.right_hand_coordinate_x=int(0x4000)
                 if self.sameRightx>self.inertia_loop:
-                    self.j.data.wAxisXRot = int(0x4000)
+                    if self.right_hand_coordinate_x<int(0x4000):
+                        self.j.data.wAxisXRot = int(0x4000)-int(0.10*self.right_hand_coordinate_x)
+                    elif self.right_hand_coordinate_x>int(0x4000):
+                        self.j.data.wAxisXRot = int(0x4000)+int(0.10*self.right_hand_coordinate_x)
+                    else:
+                        self.j.data.wAxisXRot = int(0x4000)
                 else:
                     self.j.data.wAxisXRot=self.right_hand_coordinate_x
                 self.sameRightx+=1
@@ -104,8 +120,13 @@ class DeepController():
             
             if abs(new_right_hand_coordinate_y-self.right_hand_coordinate_y)<self.threshold_movement:
                 #self.right_hand_coordinate_y=int(0x4000)
-                if self.sameRighty>self.inertia_loop:
-                    self.j.data.wAxisYRot = int(0x4000) 
+                if self.sameRighty<self.inertia_loop:
+                    if self.right_hand_coordinate_y<int(0x4000):
+                        self.j.data.wAxisYRot = int(0x4000)-int(0.1*self.right_hand_coordinate_y)
+                    elif self.sameRighty>int(0x4000):
+                        self.j.data.wAxisYRot = int(0x4000)+int(0.1*self.right_hand_coordinate_y)
+                    else:
+                        self.j.data.wAxisYRot = int(0x4000)
                 else:
                     self.j.data.wAxisYRot = self.right_hand_coordinate_y
                 self.sameRighty+=1  
