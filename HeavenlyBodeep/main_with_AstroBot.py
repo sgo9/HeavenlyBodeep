@@ -84,7 +84,7 @@ with mp_holistic.Holistic(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as holistic:
   while cap.isOpened():
-    print(gamepad.right_hand_coordinate_y,gamepad.right_hand_coordinate_x,gamepad.left_hand_coordinate_y,gamepad.left_hand_coordinate_x)
+    #print(gamepad.right_hand_coordinate_y,gamepad.right_hand_coordinate_x,gamepad.left_hand_coordinate_y,gamepad.left_hand_coordinate_x)
     #print(datetime.now().second) # TODO print timestamp for dev, remove for prod
 
     success, image = cap.read()
