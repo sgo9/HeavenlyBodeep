@@ -31,6 +31,11 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
 
     #filter blue colors to remove the planet in the background
     hsv_im = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    mask_orange = cv2.inRange(hsv_im,(10, 100, 20), (25, 255, 255) )
+    if np.array(mask_orange).sum()<1_000_000:
+        return None,None
+
     mask_planet = (hsv_im[:,:,0] < 80) 
     mask = hsv_im * mask_planet.reshape(1080,1920,1)
     im_bgr = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
