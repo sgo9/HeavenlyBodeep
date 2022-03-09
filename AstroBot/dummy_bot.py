@@ -16,19 +16,23 @@ def angle_decision(station_angle, astronaut_angle, alignement_threshold):
     return 1 # right turn 
 
 
-def dummy_decision(station_distance, station_angle, astronaut_angle, station_too_close_distance=200, alignement_threshold=0.95):
+def dummy_decision(station_distance, station_angle, toggle_angle, astronaut_angle, station_too_close_distance=200, alignement_threshold=0.95):
     """Next dummy move to do to go back to the station:
     - if station is visible, align astronaut angle with station with left or right move, then advance with both arm move
     - if station is not visible, algin astronaut angle with toggle with left or right, then advance with both arm move
     - if station is too close, make a random move"""
 
-    if station_distance is None: # station not visible
-        return angle_decision(station_angle, astronaut_angle, alignement_threshold)
+    if toggle_angle is not None:
+        return angle_decision(toggle_angle, astronaut_angle, alignement_threshold)
+        
+    else:
+        if station_distance > station_too_close_distance:
+            return angle_decision(station_angle, astronaut_angle, alignement_threshold)
+        return randint(0,2)
 
-    elif station_distance > station_too_close_distance:
-        return angle_decision(station_angle, astronaut_angle, alignement_threshold)
+    
+        
 
-    return randint(0,2)
 
 if __name__=='__main__':
     move_dict = {0:'left move',1:'right move',2:'both move'}

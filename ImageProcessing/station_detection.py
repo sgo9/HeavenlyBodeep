@@ -27,7 +27,7 @@ def astronaut_detection(image):
 
 def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     """Return the distance and angle in radians between astronaut and station, in pixels"""
-    #image= cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    image= cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
     #filter blue colors to remove the planet in the background
     hsv_im = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -68,7 +68,7 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         x,y,w,h = rect
         list_xy.append((x+w/2,y+h/2))
         cv2.rectangle(mask,(x,y),(x+w,y+h),(255,0,0),1)
-    cv2.imshow(f'mask{i}',mask)
+    #cv2.imshow('mask',mask)
 
     # find the bounding box with the astronaut
     if len(list_xy) < 2:

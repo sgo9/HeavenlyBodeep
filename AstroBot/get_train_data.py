@@ -23,7 +23,6 @@ from tensorflow.keras import models
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0' 
 
 
-
 def execute_movement(j, move, angle_correction):
     for player_position in move:
         update_vjoy(j, player_position, {}, angle_correction)
@@ -71,12 +70,12 @@ def train_dummy_bot(move_number):
         station_angle_memory = station_angle
 
         # togle angle memory
-        if toggle_angle == None:
-            toggle_angle = toggle_angle_memory
-        toggle_angle_memory = toggle_angle
+        # if toggle_angle == None:
+        #     toggle_angle = toggle_angle_memory
+        # toggle_angle_memory = toggle_angle
 
         # action with dummy_bot
-        move_key = dummy_decision(500, toggle_angle, astronaut_angle)
+        move_key = dummy_decision(500, station_angle, toggle_angle, astronaut_angle)
 
         move = movement_dict[move_key]
         execute_movement(j, move, astronaut_angle)
