@@ -109,7 +109,6 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         image_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'AstroBot','Screenshot',f'{image_name}.jpg')
         cv2.imwrite(image_path, line)
 
-    print(station_x, station_y,astronaut_x, astronaut_y)
     return astronaut_station_distance, astronaut_station_angle
     
 if __name__=="__main__":

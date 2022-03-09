@@ -52,7 +52,6 @@ def chevron_angle(image):
 		#condition on bounding box with the usual shape of the chevron's bounding box
 		if rect[2] not in range(44,57) and rect[3] not in range(44,57): 
 			continue
-		print(rect)
 		x,y,w,h = rect
 		list_xy.append((x+w/2,y+h/2))
 		cv2.rectangle(mask,(x,y),(x+w,y+h),(255,0,0),1)

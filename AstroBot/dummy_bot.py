@@ -16,7 +16,7 @@ def angle_decision(station_angle, astronaut_angle, alignement_threshold):
     return 1 # right turn 
 
 
-def dummy_decision(station_distance, station_angle, toggle_angle, astronaut_angle, station_too_close_distance=200, alignement_threshold=0.95):
+def dummy_decision(station_distance, station_angle, toggle_angle, astronaut_angle, station_too_close_distance=200, alignement_threshold=0.9):
     """Next dummy move to do to go back to the station:
     - if station is visible, align astronaut angle with station with left or right move, then advance with both arm move
     - if station is not visible, algin astronaut angle with toggle with left or right, then advance with both arm move
