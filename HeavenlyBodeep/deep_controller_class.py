@@ -23,6 +23,10 @@ class DeepController():
         self.right_hand_coordinate_y=int(0x4000)
         self.threshold_movement=3000
         self.movement_multiplicator=2
+        # self.sameRightx=0
+        # self.sameRighty=0
+        # self.sameLeftx=0
+        # self.sameLefty=0
         self.i=0
 
     def compute_buttons_value(self,a_command, grab_left, grab_right, legs_status, reset_camera):
@@ -49,21 +53,23 @@ class DeepController():
                 old_left_hand_coordinate_x=self.left_hand_coordinate_x
                 self.left_hand_coordinate_x=new_left_hand_coordinate_x
                 new_left_hand_coordinate_x-=old_left_hand_coordinate_x
-                new_left_hand_coordinate_x=int(0x4000)+new_left_hand_coordinate_x
-                new_left_hand_coordinate_x=coordinate_correction(self.movement_multiplicator*new_left_hand_coordinate_x)
+                new_left_hand_coordinate_x*=self.movement_multiplicator
+                new_left_hand_coordinate_x=coordinate_correction(int(0x4000)+new_left_hand_coordinate_x)
                 self.j.data.wAxisX = new_left_hand_coordinate_x
             
             if abs(new_left_hand_coordinate_y-self.left_hand_coordinate_y)<self.threshold_movement:
                 #self.left_hand_coordinate_y=int(0x4000)
                 self.j.data.wAxisY = int(0x4000)
+
             else:
                 #self.left_hand_coordinate_y=new_left_hand_coordinate_y
                 old_left_hand_coordinate_y=self.left_hand_coordinate_y
                 self.left_hand_coordinate_y=new_left_hand_coordinate_y
                 new_left_hand_coordinate_y-=old_left_hand_coordinate_y
-                new_left_hand_coordinate_y=int(0x4000)+new_left_hand_coordinate_y
-                new_left_hand_coordinate_y=coordinate_correction(self.movement_multiplicator*new_left_hand_coordinate_y)
+                new_left_hand_coordinate_y*=self.movement_multiplicator
+                new_left_hand_coordinate_y=coordinate_correction(int(0x4000)+new_left_hand_coordinate_y)
                 self.j.data.wAxisY = new_left_hand_coordinate_y
+                
 
             new_right_hand_coordinate_y=coordinate_correction(int(0x4000)+(player_position['right_hand_dist'] * sin(player_position['right_hand_angle']+angle_correction))*int(0x4000))
             new_right_hand_coordinate_x =coordinate_correction((player_position['right_hand_dist'] * -cos(player_position['right_hand_angle']+angle_correction))*int(0x4000)+int(0x4000))
@@ -76,8 +82,8 @@ class DeepController():
                 old_right_hand_coordinate_x=self.right_hand_coordinate_x
                 self.right_hand_coordinate_x=new_right_hand_coordinate_x
                 new_right_hand_coordinate_x-=old_right_hand_coordinate_x
-                new_right_hand_coordinate_x=int(0x4000)+new_right_hand_coordinate_x
-                new_right_hand_coordinate_x=coordinate_correction(self.movement_multiplicator*new_right_hand_coordinate_x)
+                new_right_hand_coordinate_x*=self.movement_multiplicator
+                new_right_hand_coordinate_x=coordinate_correction(int(0x4000)+new_right_hand_coordinate_x)
                 self.j.data.wAxisXRot = new_right_hand_coordinate_x
             
             if abs(new_right_hand_coordinate_y-self.right_hand_coordinate_y)<self.threshold_movement:
@@ -88,8 +94,8 @@ class DeepController():
                 old_right_hand_coordinate_y=self.right_hand_coordinate_y
                 self.right_hand_coordinate_y=new_right_hand_coordinate_y
                 new_right_hand_coordinate_y-=old_right_hand_coordinate_y
-                new_right_hand_coordinate_y=int(0x4000)+new_right_hand_coordinate_y
-                new_right_hand_coordinate_y=coordinate_correction(self.movement_multiplicator*new_right_hand_coordinate_y)
+                new_right_hand_coordinate_y*=self.movement_multiplicator
+                new_right_hand_coordinate_y=coordinate_correction(int(0x4000)+new_right_hand_coordinate_y)
                 self.j.data.wAxisYRot = new_right_hand_coordinate_y
                         
             
