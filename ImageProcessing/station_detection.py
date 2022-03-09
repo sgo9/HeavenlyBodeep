@@ -5,6 +5,7 @@ import numpy as np
 import imutils
 from scipy.spatial import distance as dist
 import os
+from math import atan2
 
 from ImageProcessing.utils import centeroidnp
 from ImageProcessing.image_filter import bgr_color_filter
@@ -75,12 +76,15 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     astronaut_station_distance = int(((station_x-astronaut_x)**2+(station_y-astronaut_y)**2)**0.5)
 
     # compute angle
-    if station_y-astronaut_y==0:
-        astronaut_station_angle = np.pi/2
-    else:
-        astronaut_station_angle = round(np.arctan((astronaut_x-station_x)/(station_y-astronaut_y)),3)
-    if station_x-astronaut_x > 0:
-        astronaut_station_angle = np.pi + astronaut_station_angle
+    # if station_y-astronaut_y==0:
+    #     astronaut_station_angle = np.pi/2
+    # else:
+    #     astronaut_station_angle = round(np.arctan((station_x-astronaut_x)/(station_y-astronaut_y)),3)
+    # if station_x-astronaut_x < 0:
+    #     astronaut_station_angle = np.pi + astronaut_station_angle
+
+    astronaut_station_angle = atan2((astronaut_x-station_x),(astronaut_y-station_y))
+    astronaut_station_angle = (astronaut_station_angle + 2*np.pi) % (2*np.pi)
 
     if screenshot_saved:
         start_point = (int(astronaut_x),int(astronaut_y))
@@ -89,12 +93,13 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
         image_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'AstroBot','Screenshot',f'{image_name}.jpg')
         cv2.imwrite(image_path, line)
 
+    print(station_x, station_y,astronaut_x, astronaut_y)
     return astronaut_station_distance, astronaut_station_angle
     
 if __name__=="__main__":
 
     image = cv2.imread('raw_data/120.png', cv2.IMREAD_COLOR)
     cv2.imshow('image',image)
-    print(station_polar_coordinates(image))
+    print(station_polar_coordinates(image, screenshot_saved=True, image_name='test'))
     cv2.waitKey(0)
     cv2.destroyAllWindows()
