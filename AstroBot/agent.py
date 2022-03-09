@@ -11,7 +11,7 @@ class Agent:
         # self.epsilon=0 #randomness
         # self.model=model #ToDo create class model
         self.move_dict = generate_movement_dict(1)
-        self.astronaut_station_distance=None
+        self.astronaut_station_distance=0
         self.astronaut_station_angle=0
         #self.trainer=QTrainer(self.model,lr=LR,gamma=self.gamma) 
         pass

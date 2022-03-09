@@ -4,19 +4,17 @@ import pickle
 from matplotlib import style
 import time
 import pyautogui
-from AstroBot.dummy_bot import dummy_decision
-from HeavenlyBodeep.utils import distance
-from action_space import generate_movement_dict
-from ImageProcessing.station_detection import station_polar_coordinates
-from agent import Agent
 import pyvjoy
-from HeavenlyBodeep.predict_angle_correction import compute_angle_correction
 import os
 import json
-from AstroBot.dummy_bot import dummy_decision
 from tensorflow.keras import models
-from ImageProcessing.chevron_detection import chevron_angle
 
+from AstroBot.agent import Agent
+from AstroBot.dummy_bot import dummy_decision
+from ImageProcessing.chevron_detection import chevron_angle
+from HeavenlyBodeep.predict_angle_correction import compute_angle_correction
+from ImageProcessing.station_detection import station_polar_coordinates
+from AstroBot.action_space import generate_movement_dict
 
 q_path = os.path.join(os.path.dirname(__file__),"Q_tables")
 
@@ -145,7 +143,7 @@ for episode in range(HM_EPISODES):
         
         else:
             chevron=chevron_angle(new_image)
-            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron)
+            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron, new_angle_astro)
         
 
     # before starting new epoch swim randomly
@@ -158,8 +156,16 @@ for episode in range(HM_EPISODES):
             pickle.dump(q_table, f)
     
     for i in range(30):
-         action=np.random.randint(0,2)
-         astronaut.do_action(action,j,np.random.choice(theta_astro_range))
+        new_image = pyautogui.screenshot()
+        new_astronaut_station_distance, new_astronaut_station_angle = station_polar_coordinates(new_image)
+        new_angle_astro = compute_angle_correction(new_image,model)
+        if new_astronaut_station_distance:
+            action=np.random.randint(0,2)
+            astronaut.do_action(action,j,np.random.choice(theta_astro_range))
+        else:
+            chevron=chevron_angle(new_image)
+            action=dummy_decision(astronaut.astronaut_station_distance,astronaut.astronaut_station_angle,chevron, new_angle_astro)
+
     
 
 moving_avg = np.convolve(episode_rewards, np.ones((SHOW_EVERY,))/SHOW_EVERY, mode='valid')
