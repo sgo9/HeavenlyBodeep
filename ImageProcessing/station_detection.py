@@ -109,12 +109,11 @@ def station_polar_coordinates(image, screenshot_saved=False,image_name=1):
     
 if __name__=="__main__":
     path = 'HeavenlyBodeep/raw_data/classifier/out/'
-    for i in range(14,124):
-        image_path = path+f'{i}.png'
-        try: 
-            image = cv2.imread(image_path, cv2.IMREAD_COLOR)
-        except:
-            pass
+    images = ['17.png','46.png','62.png','115.png','121.png']
+    for im in images:
+        image_path = path+im
+        image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+
         plt.imshow(image)
         #cv2.imshow('image',image)
         print(station_polar_coordinates(image, screenshot_saved=True, image_name='test'))
