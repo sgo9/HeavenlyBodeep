@@ -128,10 +128,8 @@ for episode in range(HM_EPISODES):
             max_future_q = np.max(q_table[new_obs])  # max Q value for this new obs
             current_q = q_table[obs][action]
 
-            if distances[-1] < winning_distance: 
-                new_q = 10_000 #TODO: to be validated once we have a better understanding of reward scale
-            else:
-                new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
+
+            new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
             
             q_table[obs][action]=new_q
 
