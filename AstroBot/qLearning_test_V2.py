@@ -6,7 +6,6 @@ import time
 import pyautogui
 import pyvjoy
 import os
-import json
 from tensorflow.keras import models
 
 from AstroBot.agent import Agent

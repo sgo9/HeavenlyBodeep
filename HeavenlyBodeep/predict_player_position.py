@@ -1,6 +1,6 @@
 from math import acos, pi
 import mediapipe as mp
-from utils import distance
+from HeavenlyBodeep.utils import distance
 
 mp_holistic = mp.solutions.holistic
 

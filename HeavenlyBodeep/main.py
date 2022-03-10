@@ -6,7 +6,6 @@ import cv2
 import mediapipe as mp
 import os
 import pyautogui
-from datetime import date, datetime
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -52,7 +51,6 @@ with mp_holistic.Holistic(
 
     player_position = compute_player_position(results, discard_not_found=False)
     grab_status = compute_grab_status(results)
-    print(datetime.now().second)
     image_game = pyautogui.screenshot()
     angle_correction = compute_angle_correction(image_game, model)
     update_vjoy(j, player_position, grab_status, angle_correction)

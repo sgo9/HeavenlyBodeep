@@ -6,7 +6,6 @@ import cv2
 import mediapipe as mp
 import os
 import pyautogui
-from datetime import date, datetime
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -59,8 +58,6 @@ with mp_holistic.Holistic(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as holistic:
   while cap.isOpened():
-
-    #print(datetime.now().second) # TODO print timestamp for dev, remove for prod
 
     success, image = cap.read()
     if not success:

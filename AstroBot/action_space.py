@@ -3,7 +3,6 @@
 import pyvjoy
 import numpy as np
 from HeavenlyBodeep.deep_controller import update_vjoy
-import time
 
 # For VJoy output:
 j = pyvjoy.VJoyDevice(1)
