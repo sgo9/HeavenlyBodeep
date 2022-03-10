@@ -28,6 +28,20 @@ In the "main_with_mode.py" file, you will find the option to choose between 3 mo
 
 This package was made in particular for mode 3: a CNN model was developped to correct the angles of the arms when the astronaut isn't facing upwards.
 
+## Pose detection controls
+
+Pose detection is made using the [Mediapipe Holistic model](https://google.github.io/mediapipe/solutions/holistic.html). The output of this model is sent to x360 via vjoy using the pyvjoy package.
+
+The controls are the following:
+- Move the arms up and down to independently control the arms of the astronaut
+- Raise one (left or right) knee to fold both the legs of the astronaut
+- Grab the hands to grab objects in the game
+- Join the hands together (namaste) to press A
+- Tilt the body to realign the camera with the astronaut
+
+![](images_readme/ezgif.com-gif-maker.gif)
+
+
 # Startup the project
 
 The initial setup.
