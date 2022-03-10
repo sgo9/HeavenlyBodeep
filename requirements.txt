@@ -3,32 +3,26 @@ pip>=9
 setuptools>=26
 twine
 wheel>=0.29
+os
 
 # data science
+math
 numpy
 pandas
-scikit-learn
-mediapipe
 tensorflow
-
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
-
-# API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
+matplotlib
+scipy.spatial
 
 # utilities
-six>=1.14
 pyvjoy
 opencv-python
 imutils
+random
+time
+datetime
+pickle
+mediapipe
+
 
 #screenshot
 Pillow

@@ -1,6 +1,6 @@
 """Predict hand grab status using holistic result"""
 
-from utils import distance
+from HeavenlyBodeep.utils import distance
 
 def compute_grab_status(results):
     """Returns a dictionary with the hand status (opened or closed).
