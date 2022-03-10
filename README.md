@@ -12,7 +12,8 @@ You will need:
 
 Settings for x360:
 setup the buttons exactly as shown below.
-![](xcontroller_config.JPG)
+![](images_readme/xcontroller_config.JPG)
+
 
 To lauch the game with HeavenlyBodeep:
 1. Start x360
