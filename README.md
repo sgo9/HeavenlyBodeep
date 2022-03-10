@@ -9,7 +9,7 @@ You will need:
 - The HeavenlyBodeep package
 
 Settings for x360:
-![Settings for x360](./xcontroller_config.JPG)
+![Settings for x360](xcontroller_config.JPG)
 
 # Startup the project
 
