@@ -1,7 +1,5 @@
 *.egg-info
-*.png
 *.csv
-*.jpg
 .coverage
 .ipynb_checkpoints
 .DS_Store
@@ -10,3 +8,4 @@ raw_data/
 **/__pycache__/
 notebooks/notebooks_test/
 AstroBot/Screenshot/
+HeavenlyBodeep/raw_data
