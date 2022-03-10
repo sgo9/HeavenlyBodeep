@@ -1,10 +1,15 @@
-# Data analysis
-- Document here the project: HeavenlyBodeep
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+# HeavenlyBodeep
+HeavenlyBodeep is a program developped to allow to play the game [Heavenly Bodies](https://heavenlybodiesgame.com/) via webcam instead of keyboard or joystick.
+- 
 
-Please document the project the better you can.
+## Getting started
+You will need:
+- The Heavenly Bodies game (compatibility with Windows only)
+- vJoy and x360 (see [link](https://u.pcloud.link/publink/show?code=kZYDtXVZLL74XzxE9SfoSurJi4PnbJDv2bf7))
+- The HeavenlyBodeep package
+
+Settings for x360:
+![alt text]https://drive.google.com/file/d/1dvFOYSx84SuebXC3S-8-4RhIfE39J-SN/view?usp=sharing)
 
 # Startup the project
 
