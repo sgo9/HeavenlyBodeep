@@ -28,12 +28,12 @@ movement_dict = generate_movement_dict()
 
 HM_EPISODES = 200
 
-epsilon = 0.7
+epsilon = 0.9
 EPS_DECAY = 0.9998  # Every episode will be epsilon*EPS_DECAY
 SHOW_EVERY = 20  # how often to play through env visually.
 MAX_NB_MOVES = 50
-start_q_table = None #'q_table_ep0.pickle' # None or Filename
-#start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
+start_q_table = 'q_table_ep0.pickle' # None or Filename
+start_q_table_path = os.path.join(os.path.dirname(__file__),'Q_tables',start_q_table)
 
 LEARNING_RATE = 0.1
 DISCOUNT = 0.95
@@ -157,7 +157,7 @@ for episode in range(HM_EPISODES):
     episode_rewards.append(episode_reward)
     epsilon *= EPS_DECAY
     if episode%10==0:
-        q_file=os.path.join(q_path,f'q_table_ep{episode}.pickle')
+        q_file=os.path.join(q_path,f'q_table_ep{start_q_table}.pickle')
         with open(q_file, "w+b") as f:
             pickle.dump(q_table, f)
     
