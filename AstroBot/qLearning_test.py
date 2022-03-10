@@ -151,6 +151,9 @@ for episode in range(HM_EPISODES):
 
     # before starting new epoch swim randomly
     
+    completion_training=np.array(list(q_table.values()))
+    completion_training=(np.count_nonzero(completion_training)/np.size(completion_training))*100
+    print(f'q_table completion:{completion_training}%')
     episode_rewards.append(episode_reward)
     epsilon *= EPS_DECAY
     if episode%10==0:
