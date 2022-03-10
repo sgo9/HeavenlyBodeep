@@ -9,7 +9,7 @@ You will need:
 - The HeavenlyBodeep package
 
 Settings for x360:
-![alt text]https://drive.google.com/file/d/1dvFOYSx84SuebXC3S-8-4RhIfE39J-SN/view?usp=sharing)
+![x360]https://drive.google.com/file/d/1dvFOYSx84SuebXC3S-8-4RhIfE39J-SN/view?usp=sharing)
 
 # Startup the project
 
