@@ -18,7 +18,7 @@ from tensorflow.keras import models
 # IgnoringStop ignoring tensorflow loading warnings (CUDA)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0' 
 
-from predict_player_position_shift_center import compute_player_position
+from predict_player_position import compute_player_position
 from predict_grab_status import compute_grab_status
 from deep_controller import update_vjoy
 from predict_angle_correction import compute_angle_correction

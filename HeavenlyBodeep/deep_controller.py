@@ -6,6 +6,7 @@ from math import cos, sin
 import pyvjoy
 
 
+
 def coordinate_correction(x):
     """Return joystick coordinate between 0x0000 (0) and 0x8000 (32768)"""
     if x > int(0x8000):
