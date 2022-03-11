@@ -13,7 +13,7 @@ class Agent:
         self.move_dict = generate_movement_dict(1)
         self.astronaut_station_distance=0
         self.astronaut_station_angle=0
-        self.chevron_angle=0
+        self.chevron_angle=-1
         #self.trainer=QTrainer(self.model,lr=LR,gamma=self.gamma) 
         pass
 
@@ -36,12 +36,12 @@ class Agent:
             update_vjoy(j, player_position, {}, angle_correction)
             sleep(0.1)
 
-    def remember(self,state,action,reward,next_state,done):
-        self.memory.append((state,action,reward,next_state,done))#popleft if maxmemory is reach
+    # def remember(self,state,action,reward,next_state,done):
+    #     self.memory.append((state,action,reward,next_state,done))#popleft if maxmemory is reach
 
-    def train_long_memory(self):
-        pass
+    # def train_long_memory(self):
+    #     pass
 
-    def train_short_memory(self,state,action,reward,next_state,done):
-        self.trainer.train_step(state,action,reward,next_state,done)
+    # def train_short_memory(self,state,action,reward,next_state,done):
+    #     self.trainer.train_step(state,action,reward,next_state,done)
     
