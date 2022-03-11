@@ -22,7 +22,7 @@ def dummy_decision(station_distance, station_angle, toggle_angle, astronaut_angl
     - if station is not visible, algin astronaut angle with toggle with left or right, then advance with both arm move
     - if station is too close, make a random move"""
 
-    if toggle_angle is not None or toggle_angle==-1:
+    if toggle_angle is not None or toggle_angle !=-1:
         return angle_decision(toggle_angle, astronaut_angle, alignement_threshold)
         
     else:
