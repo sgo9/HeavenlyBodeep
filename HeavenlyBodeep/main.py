@@ -27,6 +27,9 @@ mp_holistic = mp.solutions.holistic
 cap = cv2.VideoCapture(0) # For webcam input:
 j = pyvjoy.VJoyDevice(1) # For VJoy output:
 
+path=os.path.join(os.path.dirname(os.path.dirname(__file__)),'x360ce.exe')
+os.startfile(path)
+
 mode_selection = mode_selection() # without camera correction, auto camera reset or camera correction prediction
 
 if mode_selection == 3: # predict angle correction mpde
@@ -72,11 +75,7 @@ with mp_holistic.Holistic(
     player_position = compute_player_position(results, discard_not_found=False)
     grab_status = compute_grab_status(results)
     
-    if player_position.get('astro_bot', False):
-      if astrobot_isactive:
-        astrobot_isactive = False
-      else:
-        astrobot_isactive = True
+    astrobot_isactive = player_position.get('astro_bot', False)
 
     if astrobot_isactive and mode_selection == 3:
       
@@ -87,6 +86,8 @@ with mp_holistic.Holistic(
 
       #From screenshot get station distance and angle
       astronaut.astronaut_station_distance, astronaut.astronaut_station_angle = station_polar_coordinates(image_game)
+      if astronaut.astronaut_station_distance is not None:
+        astrobot_isactive = astronaut.astronaut_station_distance > 300
       
       #From screenshot get chevron angle, if chevron angle not detected
       toggle_angle = chevron_angle(image_game)
@@ -107,8 +108,6 @@ with mp_holistic.Holistic(
         update_vjoy(j, player_position, grab_status, angle_correction, camera_auto_rotation=True)
       else:
         update_vjoy(j, player_position, grab_status, angle_correction, camera_auto_rotation=False)
-        
-
    
     # Draw landmark annotation on the image.
     image.flags.writeable = True
@@ -120,7 +119,6 @@ with mp_holistic.Holistic(
         mp_holistic.POSE_CONNECTIONS,
         landmark_drawing_spec=mp_drawing_styles
         .get_default_pose_landmarks_style())
-
 
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Holistic', cv2.flip(image, 1))
