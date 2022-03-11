@@ -28,6 +28,7 @@ def dummy_decision(station_distance, station_angle, toggle_angle, astronaut_angl
     else:
         if station_distance > station_too_close_distance:
             return angle_decision(station_angle, astronaut_angle, alignement_threshold)
+        print('dummy !')
         return randint(0,2)
 
     
