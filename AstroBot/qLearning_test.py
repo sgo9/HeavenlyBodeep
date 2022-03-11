@@ -27,7 +27,7 @@ movement_dict = generate_movement_dict()
 
 HM_EPISODES = 200
 
-epsilon = 0.1
+epsilon = 0.2 # Manages the randomness of the learning
 EPS_DECAY = 0.9998  # Every episode will be epsilon*EPS_DECAY
 SHOW_EVERY = 20  # how often to play through env visually.
 MAX_NB_MOVES = 50
@@ -141,7 +141,7 @@ for episode in range(HM_EPISODES):
 
             if distances[-1] < winning_distance: 
                 break
-            print(f'episode:{episode}, move:{i}, distance:{distances[-1]}, reward:{reward}, station angle : {new_astronaut_station_angle * 180 / np.pi}, astro angle : {new_angle_astro * 180 / np.pi}')
+            print(f'episode:{episode}, move:{i}, distance:{distances[-1]}, reward:{reward}, station angle : {round(new_astronaut_station_angle * 180 / np.pi,1)}, astro angle : {round(new_angle_astro * 180 / np.pi,1)}, random : {random}')
         
         else:
             chevron=chevron_angle(new_image)
