@@ -26,23 +26,28 @@ def compute_player_position(results, discard_not_found=True):
             return {}
 
     # compute normalization factor
-    arm_body_ratio = 1.5 #TODO adapt to real measures
+    arm_body_ratio = 1 #TODO adapt to real measures
     body_size = distance(pt_11.x, pt_12.x, pt_11.y, pt_12.y) # distance between shoulders
     normalization_factor = body_size * arm_body_ratio
 
+    # shift hand reference
+    shift_x_ref = 0.65
+    pt_11_sx = (1+shift_x_ref)*pt_11.x-shift_x_ref*pt_12.x
+    pt_12_sx = (1+shift_x_ref)*pt_12.x-shift_x_ref*pt_11.x
+
     # compute hand distances
-    right_hand_dist = distance(pt_16.x, pt_12.x, pt_16.y, pt_12.y)/normalization_factor
-    left_hand_dist = distance(pt_15.x, pt_11.x, pt_15.y, pt_11.y)/normalization_factor
+    right_hand_dist = distance(pt_16.x, pt_12_sx, pt_16.y, pt_12.y)/normalization_factor
+    left_hand_dist = distance(pt_15.x, pt_11_sx, pt_15.y, pt_11.y)/normalization_factor
     right_hand_dist_y = (pt_16.y-pt_12.y)/normalization_factor
     left_hand_dist_y = (pt_15.y-pt_11.y)/normalization_factor
 
     # compute hand angles
-    if pt_15.x-pt_11.x > 0:
+    if pt_15.x-pt_11_sx > 0:
         left_hand_angle = (acos(left_hand_dist_y/left_hand_dist))
     else:
         left_hand_angle = 2*pi-(acos(left_hand_dist_y/left_hand_dist))
 
-    if pt_16.x-pt_12.x < 0:
+    if pt_16.x-pt_12_sx < 0:
         right_hand_angle = (acos(right_hand_dist_y/right_hand_dist))
     else:
         right_hand_angle = 2*pi-(acos(right_hand_dist_y/right_hand_dist))

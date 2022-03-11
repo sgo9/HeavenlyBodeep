@@ -72,5 +72,3 @@ if __name__=="__main__":
 
     j.data.lButtons = 0
     j.update()
-
-    os.system("TASKKILL /F /IM x360ce.exe")
