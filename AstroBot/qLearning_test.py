@@ -85,6 +85,8 @@ for episode in range(HM_EPISODES):
         new_astronaut_station_distance, new_astronaut_station_angle = station_polar_coordinates(new_image)
         new_angle_astro = compute_angle_correction(new_image,model)
         if new_astronaut_station_distance:
+            if astronaut.chevron_angle != -1:
+                astronaut.chevron_angle = -1
             if initial_loop:
                 obs = np.random.choice(theta_delta)
                 initial_loop = False
